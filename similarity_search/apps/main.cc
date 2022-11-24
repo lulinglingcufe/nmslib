@@ -24,6 +24,7 @@
 #include <fstream>
 #include <map>
 
+#include "Keccak256.h"
 #include "init.h"
 #include "global.h"
 #include "utils.h"
@@ -47,6 +48,7 @@ using std::multimap;
 using std::vector;
 using std::string;
 using std::stringstream;
+using std::int32_t; //试一下
 
 void OutData(bool DoAppend, const string& FilePrefix,
              const string& Print, const string& Header, const string& Data) {
@@ -403,6 +405,16 @@ void RunExper(bool                                bPrintProgress,
         LOG(LIB_INFO) << ">>>> Indexing time:         " << IndexTime            << " sec";
         LOG(LIB_INFO) << ">>>> Index loading time:    " << LoadTime             << " sec";
         LOG(LIB_INFO) << ">>>> Index saving  time:    " << SaveTime             << " sec";
+        LOG(LIB_INFO) << ">>>> Keccak256::HASH_LEN_TEST:    " << Keccak256::HASH_LEN_TEST           << " sec";
+        //int32_t testint = 110;  //int32_t  size_t
+        //int32_t test2int = Keccak256::max(testint);
+        //Keccak256::max();
+        
+        LOG(LIB_INFO) << ">>>> Keccak256::testrotl64:    " << Keccak256::testrotl64(100,5)         << " sec";
+        //是因为没有实例吗？
+        //config.testPrintInfo();
+
+
 
         for (size_t qtmParamId = 0; qtmParamId < QueryTimeParams.size(); ++qtmParamId) {
           for (size_t i = 0; i < config.GetRange().size(); ++i) {

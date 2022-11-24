@@ -113,6 +113,8 @@ public:
   }
 
   void PrintInfo() const;
+  void testPrintInfo() const;
+
   void SelectTestSet(int SetNum);
   int GetTestSetToRunQty() const {
     if (!noQueryData_) return 1;
@@ -129,6 +131,9 @@ public:
   const ObjectVector& GetQueryObjects() const { return queryobjects_; }
   const typename std::vector<unsigned>& GetKNN() const { return knn_; }
   float GetEPS() const { return eps_; }
+
+
+  
   const typename std::vector<dist_t>& GetRange() const { return range_; }
   int   GetQueryToRunQty() const {
     return noQueryData_ ? maxNumQueryToRun_ :

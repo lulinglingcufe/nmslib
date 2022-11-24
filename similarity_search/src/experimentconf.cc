@@ -425,6 +425,14 @@ void ExperimentConfig<dist_t>::PrintInfo() const {
   LOG(LIB_INFO) << "# of query points     = " << GetQueryToRunQty();
 }
 
+template <typename dist_t>
+void ExperimentConfig<dist_t>::testPrintInfo() const {
+  LOG(LIB_INFO) << "Test distance type         = " << 1000;
+}
+
+
+
+
 template class ExperimentConfig<float>;
 template class ExperimentConfig<int>;
 
