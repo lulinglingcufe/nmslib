@@ -48,7 +48,8 @@ using std::multimap;
 using std::vector;
 using std::string;
 using std::stringstream;
-using std::int32_t; //试一下
+using std::uint8_t; //试一下
+
 
 void OutData(bool DoAppend, const string& FilePrefix,
              const string& Print, const string& Header, const string& Data) {
@@ -410,6 +411,8 @@ void RunExper(bool                                bPrintProgress,
         //int32_t test2int = Keccak256::max(testint);
         //Keccak256::max();
         
+
+        //std::uint8_t actualHash[Keccak256::HASH_LEN];
         LOG(LIB_INFO) << ">>>> Keccak256::testrotl64:    " << Keccak256::testrotl64(100,5)         << " sec";
         //是因为没有实例吗？
         //config.testPrintInfo();

@@ -723,13 +723,16 @@ namespace similarity {
         }
         bool useOld = searchAlgoType_ == kOld || (searchAlgoType_ == kHybrid && ef_ >= 1000);
         // cout << "Ef = " << ef_ << " use old = " << useOld << endl;
+        LOG(LIB_INFO) << "This is searchMethod_ " << searchMethod_; //测试
+        LOG(LIB_INFO) << "This is useOld " << useOld; 
+        
         switch (searchMethod_) {
         case 0:
             /// Basic search using Nmslib data structure:
             if (useOld)
-                const_cast<Hnsw *>(this)->baseSearchAlgorithmOld(query);
+                const_cast<Hnsw *>(this)->baseSearchAlgorithmOld(query);//LOG(LIB_INFO) << "This is baseSearchAlgorithmOld "; //测试
             else
-                const_cast<Hnsw *>(this)->baseSearchAlgorithmV1Merge(query);
+                const_cast<Hnsw *>(this)->baseSearchAlgorithmV1Merge(query);LOG(LIB_INFO) << "This is baseSearchAlgorithmV1Merge "; //测试
             break;
         case 3:
         case 4:

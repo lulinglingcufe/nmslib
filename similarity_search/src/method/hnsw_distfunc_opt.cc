@@ -22,7 +22,7 @@
 *
 *
 */
-
+#include "Keccak256.h"
 #include "method/hnsw.h"
 #include "method/hnsw_distfunc_opt_impl_inline.h"
 #include "knnquery.h"
@@ -39,14 +39,25 @@
 #include <limits>
 #include <vector>
 
+#include <iomanip>
+using std::uint8_t;
+using std::setfill;
+using std::setw;
+
+
 //#define DIST_CALC
 namespace similarity {
 
+    int nodeCount = 0;
+    std::uint8_t * actualHashArray[1000];
+    int searchCount = 0;
 
     template <typename dist_t>
     void
     Hnsw<dist_t>::SearchOld(KNNQuery<dist_t> *query, bool normalize)
     {
+        LOG(LIB_INFO) << "This is SearchOld: ";
+
         float *pVectq = (float *)((char *)query->QueryObject()->data());
         TMP_RES_ARRAY(TmpRes);
         size_t qty = query->QueryObject()->datalength() >> 2;
@@ -101,6 +112,17 @@ namespace similarity {
 
         // query->CheckAndAddToResult(curdist, new Object(data_level0_memory_ + (curNodeNum)*memoryPerObject_ + offsetData_));
         query->CheckAndAddToResult(curdist, data_rearranged_[curNodeNum]);
+
+        //打印hash
+
+
+		std::uint8_t actualHash[Keccak256::HASH_LEN];
+		Keccak256::getHash(  (uint8_t *)data_rearranged_[curNodeNum]->buffer(), data_rearranged_[curNodeNum]->bufferlength(), actualHash);
+
+        LOG(LIB_INFO) << "actualHash: " << actualHash;
+
+
+
         massVisited[curNodeNum] = currentV;
 
         while (!candidateQueuei.empty()) {
@@ -128,6 +150,7 @@ namespace similarity {
 #ifdef DIST_CALC
                     query->distance_computations_++;
 #endif
+                    nodeCount++;  //这里可以看到访问的node到底有多少个
                     massVisited[tnum] = currentV;
                     char *currObj1 = (data_level0_memory_ + tnum * memoryPerObject_ + offsetData_);
                     dist_t d = (fstdistfunc_(pVectq, (float *)(currObj1 + 16), qty, TmpRes));
@@ -147,12 +170,18 @@ namespace similarity {
             }
         }
         visitedlistpool->releaseVisitedList(vl);
+        LOG(LIB_INFO) << "nodeCount: " << nodeCount;
     }
 
     template <typename dist_t>
     void
     Hnsw<dist_t>::SearchV1Merge(KNNQuery<dist_t> *query, bool normalize)
     {
+        //hash
+        LOG(LIB_INFO) << "This is SearchV1Merge: ";
+        std::uint8_t actualHash[Keccak256::HASH_LEN];
+
+
         float *pVectq = (float *)((char *)query->QueryObject()->data());
         TMP_RES_ARRAY(TmpRes);
         size_t qty = query->QueryObject()->datalength() >> 2;
@@ -167,6 +196,8 @@ namespace similarity {
 
         int maxlevel1 = maxlevel_;
         int curNodeNum = enterpointId_;
+        nodeCount++;
+
         dist_t curdist = (fstdistfunc_(
             pVectq, (float *)(data_level0_memory_ + enterpointId_ * memoryPerObject_ + offsetData_ + 16), qty, TmpRes));
 
@@ -185,6 +216,7 @@ namespace similarity {
 
                 for (int j = 1; j <= size; j++) {
                     int tnum = *(data + j);
+                    nodeCount++;
 
                     dist_t d = (fstdistfunc_(
                         pVectq, (float *)(data_level0_memory_ + tnum * memoryPerObject_ + offsetData_ + 16), qty, TmpRes));
@@ -234,6 +266,8 @@ namespace similarity {
                     query->distance_computations_++;
 #endif
                     massVisited[tnum] = currentV;
+                    nodeCount++;
+
                     char *currObj1 = (data_level0_memory_ + tnum * memoryPerObject_ + offsetData_);
                     dist_t d = (fstdistfunc_(pVectq, (float *)(currObj1 + 16), qty, TmpRes));
 
@@ -278,8 +312,54 @@ namespace similarity {
             // char *currObj = (data_level0_memory_ + tnum*memoryPerObject_ + offsetData_);
             // query->CheckAndAddToResult(queueData[i].key, new Object(currObj));
             query->CheckAndAddToResult(queueData[i].key, data_rearranged_[tnum]);
+
+            //打印hash结果
+		    Keccak256::getHash(  (uint8_t *)data_rearranged_[tnum]->buffer(), data_rearranged_[tnum]->bufferlength(), actualHash);
+
+            //存储hash结果
+
+            actualHashArray[searchCount] = actualHash;
+            searchCount++;
+
+
+
+
+            //LOG(LIB_INFO) << "actualHash: ";
+            //  for(int j = 0; j < 32; j++) {
+            //      //printf("%x", REV(actualHash[j]));
+            //      printf("%02X", actualHash[j]);
+            //     }
+            //     printf("\n");           
+
+           
+
+            //LOG(LIB_INFO) << hex << actualHash;
+            
+            // LOG(LIB_INFO) << "actualHash: ";
+
+            // for(int j = 0; j < 32; j++) {
+            //     LOG(LIB_INFO) << hex << actualHash[j];
+            //     }
         }
         visitedlistpool->releaseVisitedList(vl);
+        LOG(LIB_INFO) << "nodeCount: " << nodeCount;
+	    nodeCount = 0;
+
+        // LOG(LIB_INFO) << "actualHashArray: ";
+
+        // for(int j = 0; j < searchCount; j++) {
+        //     LOG(LIB_INFO) << "actualHash: ";
+        //      for(int k = 0; k < 32; k++) {
+        //          printf("%02X", actualHashArray[j][k]);
+        //         }
+        //         printf("\n"); 
+        //         }
+        // LOG(LIB_INFO) << "searchCount: " << searchCount;        
+
+
+  
+
+
     }
 
     template class Hnsw<float>;
