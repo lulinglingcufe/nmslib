@@ -178,8 +178,8 @@ namespace similarity {
     void
     Hnsw<dist_t>::SearchV1Merge(KNNQuery<dist_t> *query, bool normalize)
     {
-        WallClockTimer wtm;
-        wtm.reset();
+        // WallClockTimer wtm;
+        // wtm.reset();
 
         //hash
         //LOG(LIB_INFO) << "This is SearchV1Merge: ";
@@ -346,11 +346,15 @@ namespace similarity {
             //     }
         }
         visitedlistpool->releaseVisitedList(vl);
-        LOG(LIB_INFO) << ">>>> nodeCount: " << nodeCount;
+        LOG(LIB_INFO) << "nodeCount: " << nodeCount;
 	    nodeCount = 0;
-        wtm.split();
-        const double SearchTime  = double(wtm.elapsed())/1e6;
-        LOG(LIB_INFO) << ">>>> Search time:         " << SearchTime;         
+        // wtm.split();
+        // const double SearchTime  = double(wtm.elapsed())/1e6;
+        // LOG(LIB_INFO) << ">>>> Search time:         " << SearchTime;   
+        //时间相关的计时代码。      
+
+
+
 
         // LOG(LIB_INFO) << "actualHashArray: ";
 
