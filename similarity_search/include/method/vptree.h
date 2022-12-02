@@ -45,6 +45,8 @@ class VPTree : public Index<dist_t> {
          bool use_random_center = true);
 
   void CreateIndex(const AnyParams& IndexParams) override;
+  
+  //void GenericConstructHash(VPNode* begin_pointer) const;                  
 
   ~VPTree();
 
@@ -83,11 +85,14 @@ class VPTree : public Index<dist_t> {
            const Space<dist_t>& space, const ObjectVector& data,
            size_t max_pivot_select_attempts,
            size_t BucketSize, bool ChunkBucket,
+           VPNode* father_node_point_,
            bool use_random_center);
     ~VPNode();
 
     template <typename QueryType>
     void GenericSearch(QueryType* query, int& MaxLeavesToVisit) const;
+
+    void GenericConstructHash();  
 
    private:
     void CreateBucket(bool ChunkBucket, const ObjectVector& data, 
@@ -104,11 +109,14 @@ class VPTree : public Index<dist_t> {
     float         mediandist_;
     VPNode*       left_child_;
     VPNode*       right_child_;
+    VPNode*       father_node_;
     ObjectVector* bucket_;
     char*         CacheOptimizedBucket_;
 
     friend class VPTree;
   };
+
+
 
   Space<dist_t>&      space_;
   bool                PrintProgress_;

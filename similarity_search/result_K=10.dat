@@ -1,2 +1,2 @@
 MethodName	Recall	Recall@1	PrecisionOfApprox	RelPosError	NumCloser	ClassAccuracy	QueryTime	DistComp	ImprEfficiency	ImprDistComp	Mem	IndexTime	IndexLoadTime	IndexSaveTime	QueryPerSec	IndexParams	QueryTimeParams	NumData
-"hnsw"	1	1	1	1	0	0	0.423	0	0.596244	inf	5	0.183771	0	1e-06	2347.42	"M=10,efConstruction=40,indexThreadQty=1,searchMethod=2"	"efSearch=20"	9999
+"vptree: polynomial pruner"	0.936	0.97	0.957324	1.06068	0.0975	0	0.189052	3788.38	1.69601	2.53406	6	0.029926	0	0	5279.2	"bucketSize=10,chunkBucket=1"	"alphaLeft=2.0,alphaRight=2.0,expLeft=1,expRight=1,maxLeavesToVisit=500"	9600

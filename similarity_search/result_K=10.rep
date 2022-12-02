@@ -1,26 +1,26 @@
 
 ===================================
-hnsw
-Index parameters:      M=10,efConstruction=40,indexThreadQty=1,searchMethod=2
-Query-time parameters: efSearch=20
+vptree: polynomial pruner
+Index parameters:      bucketSize=10,chunkBucket=1
+Query-time parameters: alphaLeft=2.0,alphaRight=2.0,expLeft=1,expRight=1,maxLeavesToVisit=500
 ===================================
-# of points: 9999
-# of queries: 1
+# of points: 9600
+# of queries: 400
 ------------------------------------
-Recall:            1 -> [1 1]
-Recall@1:          1 -> [1 1]
-PrecisionOfApprox: 1 -> [1 1]
+Recall:            0.936 -> [0.936 0.936]
+Recall@1:          0.97 -> [0.97 0.97]
+PrecisionOfApprox: 0.957 -> [0.957 0.957]
 ClassAccuracy:     0 -> [0 0]
-RelPosError:       1 -> [1 	1]
-NumCloser:         0 -> [0 	0]
+RelPosError:       1.06 -> [1.06 	1.06]
+NumCloser:         0.1 -> [0.1 	0.1]
 ------------------------------------
-QueryTime:         0.42 -> [0.42 	0.43]
-QueryPerSec:       2347.42 -> [2347.42 	2347.42]
-DistComp:          0 -> [-0.01 	0.01]
+QueryTime:         0.19 -> [0.18 	0.2]
+QueryPerSec:       5279.2 -> [5279.2 	5279.2]
+DistComp:          3788.38 -> [3641.62 	3935.15]
 ------------------------------------
-ImprEfficiency:    0.6 -> [0.6 	0.6]
-ImprDistComp:      inf -> [inf 	inf]
+ImprEfficiency:    1.7 -> [1.7 	1.7]
+ImprDistComp:      2.53 -> [2.53 	2.53]
 ------------------------------------
-Memory Usage:      5.18 MB
-Index Time:        0.18 sec
+Memory Usage:      6.7 MB
+Index Time:        0.03 sec
 ------------------------------------

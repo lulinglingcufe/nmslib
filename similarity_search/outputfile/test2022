@@ -1,134 +1,175 @@
-2022-11-23 10:11:00 spacefactory.h:42 (Register) [INFO] Registering at the factory, space: dummy distance type: INT
-2022-11-23 10:11:00 spacefactory.h:42 (Register) [INFO] Registering at the factory, space: dummy distance type: FLOAT
-2022-11-23 10:11:00 spacefactory.h:42 (Register) [INFO] Registering at the factory, space: bit_hamming distance type: INT
-2022-11-23 10:11:00 spacefactory.h:42 (Register) [INFO] Registering at the factory, space: bit_jaccard distance type: FLOAT
-2022-11-23 10:11:00 spacefactory.h:42 (Register) [INFO] Registering at the factory, space: leven distance type: INT
-2022-11-23 10:11:00 spacefactory.h:42 (Register) [INFO] Registering at the factory, space: normleven distance type: FLOAT
-2022-11-23 10:11:00 spacefactory.h:42 (Register) [INFO] Registering at the factory, space: kldivfast distance type: FLOAT
-2022-11-23 10:11:00 spacefactory.h:42 (Register) [INFO] Registering at the factory, space: kldivfastrq distance type: FLOAT
-2022-11-23 10:11:00 spacefactory.h:42 (Register) [INFO] Registering at the factory, space: kldivgenfast distance type: FLOAT
-2022-11-23 10:11:00 spacefactory.h:42 (Register) [INFO] Registering at the factory, space: kldivgenslow distance type: FLOAT
-2022-11-23 10:11:00 spacefactory.h:42 (Register) [INFO] Registering at the factory, space: kldivgenfastrq distance type: FLOAT
-2022-11-23 10:11:00 spacefactory.h:42 (Register) [INFO] Registering at the factory, space: itakurasaitofast distance type: FLOAT
-2022-11-23 10:11:00 spacefactory.h:42 (Register) [INFO] Registering at the factory, space: jsdivslow distance type: FLOAT
-2022-11-23 10:11:00 spacefactory.h:42 (Register) [INFO] Registering at the factory, space: jsdivfast distance type: FLOAT
-2022-11-23 10:11:00 spacefactory.h:42 (Register) [INFO] Registering at the factory, space: jsdivfastapprox distance type: FLOAT
-2022-11-23 10:11:00 spacefactory.h:42 (Register) [INFO] Registering at the factory, space: jsmetrslow distance type: FLOAT
-2022-11-23 10:11:00 spacefactory.h:42 (Register) [INFO] Registering at the factory, space: jsmetrfast distance type: FLOAT
-2022-11-23 10:11:00 spacefactory.h:42 (Register) [INFO] Registering at the factory, space: jsmetrfastapprox distance type: FLOAT
-2022-11-23 10:11:00 spacefactory.h:42 (Register) [INFO] Registering at the factory, space: word_embed distance type: FLOAT
-2022-11-23 10:11:00 spacefactory.h:42 (Register) [INFO] Registering at the factory, space: lp distance type: FLOAT
-2022-11-23 10:11:00 spacefactory.h:42 (Register) [INFO] Registering at the factory, space: linf distance type: FLOAT
-2022-11-23 10:11:00 spacefactory.h:42 (Register) [INFO] Registering at the factory, space: l1 distance type: FLOAT
-2022-11-23 10:11:00 spacefactory.h:42 (Register) [INFO] Registering at the factory, space: l2 distance type: FLOAT
-2022-11-23 10:11:00 spacefactory.h:42 (Register) [INFO] Registering at the factory, space: cosinesimil distance type: FLOAT
-2022-11-23 10:11:00 spacefactory.h:42 (Register) [INFO] Registering at the factory, space: angulardist distance type: FLOAT
-2022-11-23 10:11:00 spacefactory.h:42 (Register) [INFO] Registering at the factory, space: negdotprod distance type: FLOAT
-2022-11-23 10:11:00 spacefactory.h:42 (Register) [INFO] Registering at the factory, space: lp_sparse distance type: FLOAT
-2022-11-23 10:11:00 spacefactory.h:42 (Register) [INFO] Registering at the factory, space: linf_sparse distance type: FLOAT
-2022-11-23 10:11:00 spacefactory.h:42 (Register) [INFO] Registering at the factory, space: l1_sparse distance type: FLOAT
-2022-11-23 10:11:00 spacefactory.h:42 (Register) [INFO] Registering at the factory, space: l2_sparse distance type: FLOAT
-2022-11-23 10:11:00 spacefactory.h:42 (Register) [INFO] Registering at the factory, space: cosinesimil_sparse distance type: FLOAT
-2022-11-23 10:11:00 spacefactory.h:42 (Register) [INFO] Registering at the factory, space: angulardist_sparse distance type: FLOAT
-2022-11-23 10:11:00 spacefactory.h:42 (Register) [INFO] Registering at the factory, space: negdotprod_sparse distance type: FLOAT
-2022-11-23 10:11:00 spacefactory.h:42 (Register) [INFO] Registering at the factory, space: cosinesimil_sparse_fast distance type: FLOAT
-2022-11-23 10:11:00 spacefactory.h:42 (Register) [INFO] Registering at the factory, space: cosinesimil_sparse_bin_fast distance type: FLOAT
-2022-11-23 10:11:00 spacefactory.h:42 (Register) [INFO] Registering at the factory, space: angulardist_sparse_fast distance type: FLOAT
-2022-11-23 10:11:00 spacefactory.h:42 (Register) [INFO] Registering at the factory, space: negdotprod_sparse_fast distance type: FLOAT
-2022-11-23 10:11:00 spacefactory.h:42 (Register) [INFO] Registering at the factory, space: negdotprod_sparse_bin_fast distance type: FLOAT
-2022-11-23 10:11:00 spacefactory.h:42 (Register) [INFO] Registering at the factory, space: querynorm_negdotprod_sparse_fast distance type: FLOAT
-2022-11-23 10:11:00 spacefactory.h:42 (Register) [INFO] Registering at the factory, space: jaccard_sparse distance type: FLOAT
-2022-11-23 10:11:00 spacefactory.h:42 (Register) [INFO] Registering at the factory, space: abdiv_slow distance type: FLOAT
-2022-11-23 10:11:00 spacefactory.h:42 (Register) [INFO] Registering at the factory, space: abdiv_fast distance type: FLOAT
-2022-11-23 10:11:00 spacefactory.h:42 (Register) [INFO] Registering at the factory, space: renyidiv_slow distance type: FLOAT
-2022-11-23 10:11:00 spacefactory.h:42 (Register) [INFO] Registering at the factory, space: renyidiv_fast distance type: FLOAT
-2022-11-23 10:11:00 spacefactory.h:42 (Register) [INFO] Registering at the factory, space: l2sqr_sift distance type: INT
-2022-11-23 10:11:00 spacefactory.h:42 (Register) [INFO] Registering at the factory, space: sparse_dense_fusion distance type: FLOAT
-2022-11-23 10:11:00 methodfactory.h:48 (Register) [INFO] Registering at the factory, method: dummy distance type: FLOAT
-2022-11-23 10:11:00 methodfactory.h:48 (Register) [INFO] Registering at the factory, method: dummy distance type: INT
-2022-11-23 10:11:00 methodfactory.h:48 (Register) [INFO] Registering at the factory, method: pivot_neighb_invindx distance type: FLOAT
-2022-11-23 10:11:00 methodfactory.h:48 (Register) [INFO] Registering at the factory, method: pivot_neighb_invindx distance type: INT
-2022-11-23 10:11:00 methodfactory.h:48 (Register) [INFO] Registering at the factory, method: napp distance type: FLOAT
-2022-11-23 10:11:00 methodfactory.h:48 (Register) [INFO] Registering at the factory, method: napp distance type: INT
-2022-11-23 10:11:00 methodfactory.h:48 (Register) [INFO] Registering at the factory, method: brute_force distance type: FLOAT
-2022-11-23 10:11:00 methodfactory.h:48 (Register) [INFO] Registering at the factory, method: brute_force distance type: INT
-2022-11-23 10:11:00 methodfactory.h:48 (Register) [INFO] Registering at the factory, method: seq_search distance type: FLOAT
-2022-11-23 10:11:00 methodfactory.h:48 (Register) [INFO] Registering at the factory, method: seq_search distance type: INT
-2022-11-23 10:11:00 methodfactory.h:48 (Register) [INFO] Registering at the factory, method: sw-graph distance type: FLOAT
-2022-11-23 10:11:00 methodfactory.h:48 (Register) [INFO] Registering at the factory, method: sw-graph distance type: INT
-2022-11-23 10:11:00 methodfactory.h:48 (Register) [INFO] Registering at the factory, method: small_world_rand distance type: FLOAT
-2022-11-23 10:11:00 methodfactory.h:48 (Register) [INFO] Registering at the factory, method: small_world_rand distance type: INT
-2022-11-23 10:11:00 methodfactory.h:48 (Register) [INFO] Registering at the factory, method: hnsw distance type: FLOAT
-2022-11-23 10:11:00 methodfactory.h:48 (Register) [INFO] Registering at the factory, method: hnsw distance type: INT
-2022-11-23 10:11:00 methodfactory.h:48 (Register) [INFO] Registering at the factory, method: vptree distance type: INT
-2022-11-23 10:11:00 methodfactory.h:48 (Register) [INFO] Registering at the factory, method: vptree distance type: FLOAT
-2022-11-23 10:11:00 methodfactory.h:48 (Register) [INFO] Registering at the factory, method: simple_invindx distance type: FLOAT
-2022-11-23 10:11:00 main.cc:569 (main) [INFO] Program arguments are processed
-2022-11-23 10:11:00 main.cc:151 (RunExper) [INFO] ### Append? : 0
-2022-11-23 10:11:00 main.cc:152 (RunExper) [INFO] ### OutFilePrefix : result
-2022-11-23 10:11:00 experimentconf.cc:413 (ReadDataset) [INFO] data & query .... ok!
+2022-11-29 14:06:09 spacefactory.h:42 (Register) [INFO] Registering at the factory, space: dummy distance type: INT
+2022-11-29 14:06:09 spacefactory.h:42 (Register) [INFO] Registering at the factory, space: dummy distance type: FLOAT
+2022-11-29 14:06:09 spacefactory.h:42 (Register) [INFO] Registering at the factory, space: bit_hamming distance type: INT
+2022-11-29 14:06:09 spacefactory.h:42 (Register) [INFO] Registering at the factory, space: bit_jaccard distance type: FLOAT
+2022-11-29 14:06:09 spacefactory.h:42 (Register) [INFO] Registering at the factory, space: leven distance type: INT
+2022-11-29 14:06:09 spacefactory.h:42 (Register) [INFO] Registering at the factory, space: normleven distance type: FLOAT
+2022-11-29 14:06:09 spacefactory.h:42 (Register) [INFO] Registering at the factory, space: kldivfast distance type: FLOAT
+2022-11-29 14:06:09 spacefactory.h:42 (Register) [INFO] Registering at the factory, space: kldivfastrq distance type: FLOAT
+2022-11-29 14:06:09 spacefactory.h:42 (Register) [INFO] Registering at the factory, space: kldivgenfast distance type: FLOAT
+2022-11-29 14:06:09 spacefactory.h:42 (Register) [INFO] Registering at the factory, space: kldivgenslow distance type: FLOAT
+2022-11-29 14:06:09 spacefactory.h:42 (Register) [INFO] Registering at the factory, space: kldivgenfastrq distance type: FLOAT
+2022-11-29 14:06:09 spacefactory.h:42 (Register) [INFO] Registering at the factory, space: itakurasaitofast distance type: FLOAT
+2022-11-29 14:06:09 spacefactory.h:42 (Register) [INFO] Registering at the factory, space: jsdivslow distance type: FLOAT
+2022-11-29 14:06:09 spacefactory.h:42 (Register) [INFO] Registering at the factory, space: jsdivfast distance type: FLOAT
+2022-11-29 14:06:09 spacefactory.h:42 (Register) [INFO] Registering at the factory, space: jsdivfastapprox distance type: FLOAT
+2022-11-29 14:06:09 spacefactory.h:42 (Register) [INFO] Registering at the factory, space: jsmetrslow distance type: FLOAT
+2022-11-29 14:06:09 spacefactory.h:42 (Register) [INFO] Registering at the factory, space: jsmetrfast distance type: FLOAT
+2022-11-29 14:06:09 spacefactory.h:42 (Register) [INFO] Registering at the factory, space: jsmetrfastapprox distance type: FLOAT
+2022-11-29 14:06:09 spacefactory.h:42 (Register) [INFO] Registering at the factory, space: word_embed distance type: FLOAT
+2022-11-29 14:06:09 spacefactory.h:42 (Register) [INFO] Registering at the factory, space: lp distance type: FLOAT
+2022-11-29 14:06:09 spacefactory.h:42 (Register) [INFO] Registering at the factory, space: linf distance type: FLOAT
+2022-11-29 14:06:09 spacefactory.h:42 (Register) [INFO] Registering at the factory, space: l1 distance type: FLOAT
+2022-11-29 14:06:09 spacefactory.h:42 (Register) [INFO] Registering at the factory, space: l2 distance type: FLOAT
+2022-11-29 14:06:09 spacefactory.h:42 (Register) [INFO] Registering at the factory, space: cosinesimil distance type: FLOAT
+2022-11-29 14:06:09 spacefactory.h:42 (Register) [INFO] Registering at the factory, space: angulardist distance type: FLOAT
+2022-11-29 14:06:09 spacefactory.h:42 (Register) [INFO] Registering at the factory, space: negdotprod distance type: FLOAT
+2022-11-29 14:06:09 spacefactory.h:42 (Register) [INFO] Registering at the factory, space: lp_sparse distance type: FLOAT
+2022-11-29 14:06:09 spacefactory.h:42 (Register) [INFO] Registering at the factory, space: linf_sparse distance type: FLOAT
+2022-11-29 14:06:09 spacefactory.h:42 (Register) [INFO] Registering at the factory, space: l1_sparse distance type: FLOAT
+2022-11-29 14:06:09 spacefactory.h:42 (Register) [INFO] Registering at the factory, space: l2_sparse distance type: FLOAT
+2022-11-29 14:06:09 spacefactory.h:42 (Register) [INFO] Registering at the factory, space: cosinesimil_sparse distance type: FLOAT
+2022-11-29 14:06:09 spacefactory.h:42 (Register) [INFO] Registering at the factory, space: angulardist_sparse distance type: FLOAT
+2022-11-29 14:06:09 spacefactory.h:42 (Register) [INFO] Registering at the factory, space: negdotprod_sparse distance type: FLOAT
+2022-11-29 14:06:09 spacefactory.h:42 (Register) [INFO] Registering at the factory, space: cosinesimil_sparse_fast distance type: FLOAT
+2022-11-29 14:06:09 spacefactory.h:42 (Register) [INFO] Registering at the factory, space: cosinesimil_sparse_bin_fast distance type: FLOAT
+2022-11-29 14:06:09 spacefactory.h:42 (Register) [INFO] Registering at the factory, space: angulardist_sparse_fast distance type: FLOAT
+2022-11-29 14:06:09 spacefactory.h:42 (Register) [INFO] Registering at the factory, space: negdotprod_sparse_fast distance type: FLOAT
+2022-11-29 14:06:09 spacefactory.h:42 (Register) [INFO] Registering at the factory, space: negdotprod_sparse_bin_fast distance type: FLOAT
+2022-11-29 14:06:09 spacefactory.h:42 (Register) [INFO] Registering at the factory, space: querynorm_negdotprod_sparse_fast distance type: FLOAT
+2022-11-29 14:06:09 spacefactory.h:42 (Register) [INFO] Registering at the factory, space: jaccard_sparse distance type: FLOAT
+2022-11-29 14:06:09 spacefactory.h:42 (Register) [INFO] Registering at the factory, space: abdiv_slow distance type: FLOAT
+2022-11-29 14:06:09 spacefactory.h:42 (Register) [INFO] Registering at the factory, space: abdiv_fast distance type: FLOAT
+2022-11-29 14:06:09 spacefactory.h:42 (Register) [INFO] Registering at the factory, space: renyidiv_slow distance type: FLOAT
+2022-11-29 14:06:09 spacefactory.h:42 (Register) [INFO] Registering at the factory, space: renyidiv_fast distance type: FLOAT
+2022-11-29 14:06:09 spacefactory.h:42 (Register) [INFO] Registering at the factory, space: l2sqr_sift distance type: INT
+2022-11-29 14:06:09 spacefactory.h:42 (Register) [INFO] Registering at the factory, space: sparse_dense_fusion distance type: FLOAT
+2022-11-29 14:06:09 methodfactory.h:48 (Register) [INFO] Registering at the factory, method: dummy distance type: FLOAT
+2022-11-29 14:06:09 methodfactory.h:48 (Register) [INFO] Registering at the factory, method: dummy distance type: INT
+2022-11-29 14:06:09 methodfactory.h:48 (Register) [INFO] Registering at the factory, method: pivot_neighb_invindx distance type: FLOAT
+2022-11-29 14:06:09 methodfactory.h:48 (Register) [INFO] Registering at the factory, method: pivot_neighb_invindx distance type: INT
+2022-11-29 14:06:09 methodfactory.h:48 (Register) [INFO] Registering at the factory, method: napp distance type: FLOAT
+2022-11-29 14:06:09 methodfactory.h:48 (Register) [INFO] Registering at the factory, method: napp distance type: INT
+2022-11-29 14:06:09 methodfactory.h:48 (Register) [INFO] Registering at the factory, method: brute_force distance type: FLOAT
+2022-11-29 14:06:09 methodfactory.h:48 (Register) [INFO] Registering at the factory, method: brute_force distance type: INT
+2022-11-29 14:06:09 methodfactory.h:48 (Register) [INFO] Registering at the factory, method: seq_search distance type: FLOAT
+2022-11-29 14:06:09 methodfactory.h:48 (Register) [INFO] Registering at the factory, method: seq_search distance type: INT
+2022-11-29 14:06:09 methodfactory.h:48 (Register) [INFO] Registering at the factory, method: sw-graph distance type: FLOAT
+2022-11-29 14:06:09 methodfactory.h:48 (Register) [INFO] Registering at the factory, method: sw-graph distance type: INT
+2022-11-29 14:06:09 methodfactory.h:48 (Register) [INFO] Registering at the factory, method: small_world_rand distance type: FLOAT
+2022-11-29 14:06:09 methodfactory.h:48 (Register) [INFO] Registering at the factory, method: small_world_rand distance type: INT
+2022-11-29 14:06:09 methodfactory.h:48 (Register) [INFO] Registering at the factory, method: hnsw distance type: FLOAT
+2022-11-29 14:06:09 methodfactory.h:48 (Register) [INFO] Registering at the factory, method: hnsw distance type: INT
+2022-11-29 14:06:09 methodfactory.h:48 (Register) [INFO] Registering at the factory, method: vptree distance type: INT
+2022-11-29 14:06:09 methodfactory.h:48 (Register) [INFO] Registering at the factory, method: vptree distance type: FLOAT
+2022-11-29 14:06:09 methodfactory.h:48 (Register) [INFO] Registering at the factory, method: simple_invindx distance type: FLOAT
+2022-11-29 14:06:09 main.cc:584 (main) [INFO] Program arguments are processed
+2022-11-29 14:06:09 main.cc:154 (RunExper) [INFO] ### Append? : 0
+2022-11-29 14:06:09 main.cc:155 (RunExper) [INFO] ### OutFilePrefix : result
+2022-11-29 14:06:09 experimentconf.cc:413 (ReadDataset) [INFO] data & query .... ok!
 
-2022-11-23 10:11:00 gold_standard.h:235 (Compute) [INFO] Computing gold standard data using 1 threads, keeping 10x entries compared to the result set size
-2022-11-23 10:11:00 main.cc:333 (RunExper) [INFO] >>>> Test set id: 0 (set qty: 1)
-2022-11-23 10:11:00 main.cc:343 (RunExper) [INFO] >>>> Index type : hnsw
-2022-11-23 10:11:00 main.cc:344 (RunExper) [INFO] >>>> Index Time Parameters: M=10,efConstruction=20,indexThreadQty=1,searchMethod=3
-2022-11-23 10:11:00 main.cc:363 (RunExper) [INFO] Creating an index from scratch
-2022-11-23 10:11:00 hnsw.cc:210 (CreateIndex) [INFO] M                   = 10
-2022-11-23 10:11:00 hnsw.cc:211 (CreateIndex) [INFO] indexThreadQty      = 1
-2022-11-23 10:11:00 hnsw.cc:212 (CreateIndex) [INFO] efConstruction      = 20
-2022-11-23 10:11:00 hnsw.cc:213 (CreateIndex) [INFO] maxM			          = 10
-2022-11-23 10:11:00 hnsw.cc:214 (CreateIndex) [INFO] maxM0			          = 20
-2022-11-23 10:11:00 hnsw.cc:216 (CreateIndex) [INFO] mult                = 0.434294
-2022-11-23 10:11:00 hnsw.cc:217 (CreateIndex) [INFO] skip_optimized_index= 0
-2022-11-23 10:11:00 hnsw.cc:218 (CreateIndex) [INFO] delaunay_type       = 2
-2022-11-23 10:11:00 hnsw.cc:504 (SetQueryTimeParams) [INFO] Set HNSW query-time parameters:
-2022-11-23 10:11:00 hnsw.cc:505 (SetQueryTimeParams) [INFO] ef(Search)         =20
-2022-11-23 10:11:00 hnsw.cc:506 (SetQueryTimeParams) [INFO] algoType           =2
-2022-11-23 10:11:00 hnsw.cc:376 (CreateIndex) [INFO] 
-The space is Euclidean
-2022-11-23 10:11:00 hnsw.cc:378 (CreateIndex) [INFO] Vector length=8
-2022-11-23 10:11:00 hnsw.cc:383 (CreateIndex) [INFO] Thus using function with any base
-2022-11-23 10:11:00 hnsw.cc:416 (CreateIndex) [INFO] searchMethod			  = 3
-2022-11-23 10:11:00 hnsw.cc:428 (CreateIndex) [INFO] Making optimized index
-2022-11-23 10:11:00 hnsw.cc:467 (CreateIndex) [INFO] Finished making optimized index
-2022-11-23 10:11:00 hnsw.cc:468 (CreateIndex) [INFO] Maximum level = 4
-2022-11-23 10:11:00 hnsw.cc:469 (CreateIndex) [INFO] Total memory allocated for optimized index+data: 1 Mb
-2022-11-23 10:11:00 main.cc:373 (RunExper) [INFO] ==============================================
-2022-11-23 10:11:00 main.cc:399 (RunExper) [INFO] >>>> Process memory usage:  26.918 MBs
-2022-11-23 10:11:00 main.cc:400 (RunExper) [INFO] >>>> Virtual memory usage:  5.2063 MBs
-2022-11-23 10:11:00 main.cc:401 (RunExper) [INFO] >>>> Adjusted memory usage: 5.2063 MBs
-2022-11-23 10:11:00 main.cc:402 (RunExper) [INFO] >>>> Data size:             0.303955 MBs
-2022-11-23 10:11:00 main.cc:403 (RunExper) [INFO] >>>> Indexing time:         0.097206 sec
-2022-11-23 10:11:00 main.cc:404 (RunExper) [INFO] >>>> Index loading time:    0 sec
-2022-11-23 10:11:00 main.cc:405 (RunExper) [INFO] >>>> Index saving  time:    1e-06 sec
-2022-11-23 10:11:00 experiments.h:74 (RunAll) [INFO] >>>> TestSetId: 0
-2022-11-23 10:11:00 experiments.h:75 (RunAll) [INFO] >>>> Will use: 1 threads in efficiency testing
-2022-11-23 10:11:00 experimentconf.cc:418 (PrintInfo) [INFO] SpaceLp: p = 2 do we have a special implementation for this p? : 1
-2022-11-23 10:11:00 experimentconf.cc:419 (PrintInfo) [INFO] distance type         = FLOAT
-2022-11-23 10:11:00 experimentconf.cc:420 (PrintInfo) [INFO] data file             = ../sample_data/final8_10K.txt
-2022-11-23 10:11:00 experimentconf.cc:421 (PrintInfo) [INFO] # of test sets        = 1
-2022-11-23 10:11:00 experimentconf.cc:422 (PrintInfo) [INFO] # of test sets to run = 1
-2022-11-23 10:11:00 experimentconf.cc:423 (PrintInfo) [INFO] Use held-out queries  = 0
-2022-11-23 10:11:00 experimentconf.cc:424 (PrintInfo) [INFO] # of data points      = 9960
-2022-11-23 10:11:00 experimentconf.cc:425 (PrintInfo) [INFO] # of query points     = 40
-2022-11-23 10:11:00 experiments.h:119 (Execute) [INFO] ##### Query type: K-NN
-2022-11-23 10:11:00 experiments.h:120 (Execute) [INFO] >>>> query params = K = 10 Epsilon = 0
-2022-11-23 10:11:00 experiments.h:121 (Execute) [INFO] >>>> Computing efficiency metrics 
-2022-11-23 10:11:00 experiments.h:122 (Execute) [INFO] >>>> # of query time parameters: 1
-2022-11-23 10:11:00 hnsw.cc:504 (SetQueryTimeParams) [INFO] Set HNSW query-time parameters:
-2022-11-23 10:11:00 hnsw.cc:505 (SetQueryTimeParams) [INFO] ef(Search)         =20
-2022-11-23 10:11:00 hnsw.cc:506 (SetQueryTimeParams) [INFO] algoType           =2
-2022-11-23 10:11:00 experiments.h:155 (Execute) [INFO] >>>> Query-Time Parameters: efSearch=20
-2022-11-23 10:11:00 experiments.h:157 (Execute) [INFO] >>>> Efficiency test for: hnsw
-2022-11-23 10:11:00 experiments.h:222 (Execute) [INFO] >>>> Computing effectiveness metrics for hnsw
-2022-11-23 10:11:00 eval_metrics.h:72 (iterate) [INFO] Ex: 0 id = 1867 -> Apr: 0 id = 1867 1 - ratio: 0.888744 diff: 0.0988784
-2022-11-23 10:11:00 eval_metrics.h:72 (iterate) [INFO] Ex: 0 id = 3899 -> Apr: 0 id = 3899 1 - ratio: 0.888744 diff: 0.0988784
-2022-11-23 10:11:00 eval_metrics.h:72 (iterate) [INFO] Ex: 0.00864017 id = 7858 -> Apr: 7.46525e-05 id = 7858 1 - ratio: 0.888744 diff: 0.0988784
-2022-11-23 10:11:00 eval_metrics.h:72 (iterate) [INFO] Ex: 0.0849502 id = 7702 -> Apr: 0.00721654 id = 7702 1 - ratio: 0.888744 diff: 0.0988784
-2022-11-23 10:11:00 eval_metrics.h:72 (iterate) [INFO] Ex: 0.096627 id = 7704 -> Apr: 0.00933677 id = 7704 1 - ratio: 0.888744 diff: 0.0988784
-2022-11-23 10:11:00 eval_metrics.h:72 (iterate) [INFO] Ex: 0.105535 id = 7575 -> Apr: 0.0111377 id = 7575 1 - ratio: 0.888744 diff: 0.0988784
-2022-11-23 10:11:00 eval_metrics.h:72 (iterate) [INFO] Ex: 0.105795 id = 720 -> Apr: 0.0111926 id = 720 1 - ratio: 0.888744 diff: 0.0988784
-2022-11-23 10:11:00 eval_metrics.h:72 (iterate) [INFO] Ex: 0.106009 id = 6240 -> Apr: 0.0112379 id = 6240 1 - ratio: 0.888744 diff: 0.0988784
-2022-11-23 10:11:00 eval_metrics.h:72 (iterate) [INFO] Ex: 0.111256 id = 3879 -> Apr: 0.012378 id = 5716 1 - ratio: 0.888744 diff: 0.0988784
-2022-11-23 10:11:00 eval_metrics.h:72 (iterate) [INFO] Ex: 0.111256 id = 5716 -> Apr: 0.012378 id = 7843 1 - ratio: 0.888744 diff: 0.0988784
-2022-11-23 10:11:00 eval_metrics.h:76 (iterate) [FATAL] bug: the approximate query should not return objects that are closer to the query than object returned by (exact) sequential searching! Approx: 0.012378 id = 5716 Exact: 0.111256 id = 3879 difference: -0.0988784
+2022-11-29 14:06:09 gold_standard.h:235 (Compute) [INFO] Computing gold standard data using 1 threads, keeping 10x entries compared to the result set size
+2022-11-29 14:06:09 main.cc:336 (RunExper) [INFO] >>>> Test set id: 0 (set qty: 1)
+2022-11-29 14:06:09 main.cc:346 (RunExper) [INFO] >>>> Index type : vptree
+2022-11-29 14:06:09 main.cc:347 (RunExper) [INFO] >>>> Index Time Parameters: bucketSize=10,chunkBucket=1
+2022-11-29 14:06:09 main.cc:366 (RunExper) [INFO] Creating an index from scratch
+2022-11-29 14:06:09 vptree.cc:78 (CreateIndex) [INFO] bucketSize          = 10
+2022-11-29 14:06:09 vptree.cc:79 (CreateIndex) [INFO] chunkBucket         = 1
+2022-11-29 14:06:09 vptree.cc:80 (CreateIndex) [INFO] selectPivotAttempts = 5
+2022-11-29 14:06:09 searchoracle.h:159 (LogParams) [INFO] alphaLeft = 1 expLeft = 1
+2022-11-29 14:06:09 searchoracle.h:160 (LogParams) [INFO] alphaRight = 1 expRight = 1
+2022-11-29 14:06:09 searchoracle.cc:54 (SetQueryTimeParams) [INFO] Set polynomial pruner query-time parameters:
+2022-11-29 14:06:09 searchoracle.cc:55 (SetQueryTimeParams) [INFO] alphaLeft: 1 ExponentLeft: 1 alphaRight: 1 ExponentRight: 1
+2022-11-29 14:06:09 vptree.h:66 (SetQueryTimeParams) [INFO] Set VP-tree query-time parameters:
+2022-11-29 14:06:09 vptree.h:67 (SetQueryTimeParams) [INFO] maxLeavesToVisit=2147483647
+2022-11-29 14:06:09 main.cc:376 (RunExper) [INFO] ==============================================
+2022-11-29 14:06:09 main.cc:402 (RunExper) [INFO] >>>> Process memory usage:  33.6172 MBs
+2022-11-29 14:06:09 main.cc:403 (RunExper) [INFO] >>>> Virtual memory usage:  11.6816 MBs
+2022-11-29 14:06:09 main.cc:404 (RunExper) [INFO] >>>> Adjusted memory usage: 6.84766 MBs
+2022-11-29 14:06:09 main.cc:405 (RunExper) [INFO] >>>> Data size:             4.83398 MBs
+2022-11-29 14:06:09 main.cc:406 (RunExper) [INFO] >>>> Indexing time:         0.033018 sec
+2022-11-29 14:06:09 main.cc:407 (RunExper) [INFO] >>>> Index loading time:    0 sec
+2022-11-29 14:06:09 main.cc:408 (RunExper) [INFO] >>>> Index saving  time:    1e-06 sec
+2022-11-29 14:06:09 main.cc:409 (RunExper) [INFO] >>>> Keccak256::HASH_LEN_TEST:    32 sec
+2022-11-29 14:06:09 main.cc:416 (RunExper) [INFO] >>>> Keccak256::testrotl64:    100 sec
+2022-11-29 14:06:09 experiments.h:74 (RunAll) [INFO] >>>> TestSetId: 0
+2022-11-29 14:06:09 experiments.h:75 (RunAll) [INFO] >>>> Will use: 1 threads in efficiency testing
+2022-11-29 14:06:09 experimentconf.cc:418 (PrintInfo) [INFO] SpaceLp: p = 2 do we have a special implementation for this p? : 1
+2022-11-29 14:06:09 experimentconf.cc:419 (PrintInfo) [INFO] distance type         = FLOAT
+2022-11-29 14:06:09 experimentconf.cc:420 (PrintInfo) [INFO] data file             = ../sample_data/final128_10K.txt
+2022-11-29 14:06:09 experimentconf.cc:421 (PrintInfo) [INFO] # of test sets        = 1
+2022-11-29 14:06:09 experimentconf.cc:422 (PrintInfo) [INFO] # of test sets to run = 1
+2022-11-29 14:06:09 experimentconf.cc:423 (PrintInfo) [INFO] Use held-out queries  = 0
+2022-11-29 14:06:09 experimentconf.cc:424 (PrintInfo) [INFO] # of data points      = 9900
+2022-11-29 14:06:09 experimentconf.cc:425 (PrintInfo) [INFO] # of query points     = 100
+2022-11-29 14:06:09 experiments.h:119 (Execute) [INFO] ##### Query type: K-NN
+2022-11-29 14:06:09 experiments.h:120 (Execute) [INFO] >>>> query params = K = 10 Epsilon = 0
+2022-11-29 14:06:09 experiments.h:121 (Execute) [INFO] >>>> Computing efficiency metrics 
+2022-11-29 14:06:09 experiments.h:122 (Execute) [INFO] >>>> # of query time parameters: 1
+2022-11-29 14:06:09 searchoracle.cc:54 (SetQueryTimeParams) [INFO] Set polynomial pruner query-time parameters:
+2022-11-29 14:06:09 searchoracle.cc:55 (SetQueryTimeParams) [INFO] alphaLeft: 2 ExponentLeft: 1 alphaRight: 2 ExponentRight: 1
+2022-11-29 14:06:09 vptree.h:66 (SetQueryTimeParams) [INFO] Set VP-tree query-time parameters:
+2022-11-29 14:06:09 vptree.h:67 (SetQueryTimeParams) [INFO] maxLeavesToVisit=500
+2022-11-29 14:06:09 experiments.h:155 (Execute) [INFO] >>>> Query-Time Parameters: alphaLeft=2.0,alphaRight=2.0,expLeft=1,expRight=1,maxLeavesToVisit=500
+2022-11-29 14:06:09 experiments.h:157 (Execute) [INFO] >>>> Efficiency test for: vptree: polynomial pruner
+2022-11-29 14:06:09 experiments.h:222 (Execute) [INFO] >>>> Computing effectiveness metrics for vptree: polynomial pruner
+2022-11-29 14:06:09 experiments.h:269 (Execute) [INFO] =========================================
+2022-11-29 14:06:09 experiments.h:270 (Execute) [INFO] >>>> Index type is vptree: polynomial pruner
+2022-11-29 14:06:09 experiments.h:271 (Execute) [INFO] =========================================
+2022-11-29 14:06:09 experiments.h:272 (Execute) [INFO] >>>> max # results = 10
+2022-11-29 14:06:09 experiments.h:273 (Execute) [INFO] >>>> avg # results = 10
+2022-11-29 14:06:09 experiments.h:274 (Execute) [INFO] >>>> # of distance computations = 4075.08
+2022-11-29 14:06:09 experiments.h:275 (Execute) [INFO] >>>> Impr in # of dist comp: 2.4294
+2022-11-29 14:06:09 experiments.h:276 (Execute) [INFO] =========================================
+2022-11-29 14:06:09 experiments.h:277 (Execute) [INFO] >>>> Time elapsed:           0.017031 sec
+2022-11-29 14:06:09 experiments.h:278 (Execute) [INFO] >>>> # of queries per sec: : 5871.65
+2022-11-29 14:06:09 experiments.h:279 (Execute) [INFO] >>>> Avg time per query:     1.7031e-07 msec
+2022-11-29 14:06:09 experiments.h:280 (Execute) [INFO] >>>> System time elapsed:    0 sec
+2022-11-29 14:06:09 experiments.h:281 (Execute) [INFO] =========================================
+2022-11-29 14:06:09 experiments.h:298 (Execute) [INFO] =========================================
+2022-11-29 14:06:09 experiments.h:299 (Execute) [INFO] >>>> # of test threads:              1
+2022-11-29 14:06:09 experiments.h:300 (Execute) [INFO] >>>> Seq. search time elapsed:       0.034493 sec
+2022-11-29 14:06:09 experiments.h:301 (Execute) [INFO] >>>> Avg Seq. search time per query: 0.34493 msec
+2022-11-29 14:06:09 experiments.h:302 (Execute) [INFO] >>>> Impr. in Efficiency = 2.02531
+2022-11-29 14:06:09 experiments.h:303 (Execute) [INFO] >>>> Recall              = 0.943
+2022-11-29 14:06:09 experiments.h:304 (Execute) [INFO] >>>> PrecisionOfApprox   = 0.957039
+2022-11-29 14:06:09 experiments.h:305 (Execute) [INFO] >>>> RelPosError         = 1.06202
+2022-11-29 14:06:09 experiments.h:306 (Execute) [INFO] >>>> NumCloser           = 0.06
+2022-11-29 14:06:09 experiments.h:307 (Execute) [INFO] >>>> RecallAt1           = 0.97
+2022-11-29 14:06:09 experiments.h:308 (Execute) [INFO] >>>> Class. accuracy     = 0
+2022-11-29 14:06:09 experiments.h:312 (Execute) [INFO] #### Finished K-NN 2022-11-29 14:06:09
+2022-11-29 14:06:09 experiments.h:103 (RunAll) [INFO] experiment done at 2022-11-29 14:06:09
+2022-11-29 14:06:09 main.cc:497 (RunExper) [INFO] KNN: 10
+2022-11-29 14:06:09 main.cc:498 (RunExper) [INFO] 
+===================================
+vptree: polynomial pruner
+Index parameters:      bucketSize=10,chunkBucket=1
+Query-time parameters: alphaLeft=2.0,alphaRight=2.0,expLeft=1,expRight=1,maxLeavesToVisit=500
+===================================
+# of points: 9900
+# of queries: 100
+------------------------------------
+Recall:            0.943 -> [0.943 0.943]
+Recall@1:          0.97 -> [0.97 0.97]
+PrecisionOfApprox: 0.957 -> [0.957 0.957]
+ClassAccuracy:     0 -> [0 0]
+RelPosError:       1.06 -> [1.06 	1.06]
+NumCloser:         0.06 -> [0.06 	0.06]
+------------------------------------
+QueryTime:         0.17 -> [0.16 	0.18]
+QueryPerSec:       5871.65 -> [5871.65 	5871.65]
+DistComp:          4075.08 -> [3826.95 	4323.21]
+------------------------------------
+ImprEfficiency:    2.03 -> [2.03 	2.03]
+ImprDistComp:      2.43 -> [2.43 	2.43]
+------------------------------------
+Memory Usage:      6.85 MB
+Index Time:        0.03 sec
+------------------------------------
+
+2022-11-29 14:06:09 main.cc:499 (RunExper) [INFO] Data: MethodName	Recall	Recall@1	PrecisionOfApprox	RelPosError	NumCloser	ClassAccuracy	QueryTime	DistComp	ImprEfficiency	ImprDistComp	Mem	IndexTime	IndexLoadTime	IndexSaveTime	QueryPerSec	IndexParams	QueryTimeParams	NumData
+"vptree: polynomial pruner"	0.943	0.97	0.957039	1.06202	0.06	0	0.17011	4075.08	2.02531	2.4294	6	0.033018	0	1e-06	5871.65	"bucketSize=10,chunkBucket=1"	"alphaLeft=2.0,alphaRight=2.0,expLeft=1,expRight=1,maxLeavesToVisit=500"	9900
+
+2022-11-29 14:06:09 main.cc:59 (OutData) [INFO] DoAppend? 0
+2022-11-29 14:06:09 main.cc:641 (main) [INFO] Time elapsed = 0.335804
+2022-11-29 14:06:09 main.cc:642 (main) [INFO] Finished at 2022-11-29 14:06:09

@@ -48,7 +48,9 @@ using std::cerr;
 const IdType PIVOT_ID_NULL_NODE = -2;
 const IdType PIVOT_ID_NULL_PIVOT = -1;
 const uint32_t VERSION_NUMBER = 2;
-    
+
+int VPtreeVisitTimes_test = 0;
+
 template <typename dist_t, typename SearchOracle>
 VPTree<dist_t, SearchOracle>::VPTree(
                        bool  PrintProgress,
@@ -97,12 +99,22 @@ void VPTree<dist_t, SearchOracle>::CreateIndex(const AnyParams& IndexParams) {
                      space_, this->data_,
                      max_pivot_select_attempts_,
                      BucketSize_, ChunkBucket_,
+                     NULL,
                      use_random_center_ /* use random center */));
+
+
+  //把构造hash的递归函数放在这里
+  root_->GenericConstructHash();
+  //GenericConstructHash(root_);
+
 
   if (progress_bar) { // make it 100%
     (*progress_bar) += (progress_bar->expected_count() - progress_bar->count());
   }
 }
+
+
+
 
 template <typename dist_t,typename SearchOracle>
 VPTree<dist_t, SearchOracle>::~VPTree() {
@@ -117,12 +129,16 @@ template <typename dist_t, typename SearchOracle>
 void VPTree<dist_t, SearchOracle>::Search(RangeQuery<dist_t>* query, IdType) const {
   int mx = MaxLeavesToVisit_;
   root_->GenericSearch(query, mx);
+  LOG(LIB_INFO) << "RangeQuery VPtreeVisitTimes_test          = " << VPtreeVisitTimes_test;
+  VPtreeVisitTimes_test = 0;  
 }
 
 template <typename dist_t, typename SearchOracle>
 void VPTree<dist_t, SearchOracle>::Search(KNNQuery<dist_t>* query, IdType) const {
   int mx = MaxLeavesToVisit_;
   root_->GenericSearch(query, mx);
+  LOG(LIB_INFO) << "KNNQuery VPtreeVisitTimes_test          = " << VPtreeVisitTimes_test;
+  VPtreeVisitTimes_test = 0;  
 }
 
 template <typename dist_t, typename SearchOracle>
@@ -301,6 +317,7 @@ VPTree<dist_t, SearchOracle>::VPNode::VPNode(const SearchOracle& oracle)
       left_child_(NULL),
       right_child_(NULL),
       bucket_(NULL),
+      father_node_(NULL),
       CacheOptimizedBucket_(NULL) {}
 
 template <typename dist_t, typename SearchOracle>
@@ -311,10 +328,11 @@ VPTree<dist_t, SearchOracle>::VPNode::VPNode(
                                const Space<dist_t>& space, const ObjectVector& data,
                                size_t max_pivot_select_attempts,
                                size_t BucketSize, bool ChunkBucket,
+                               VPNode* father_node_point_,
                                bool use_random_center)
     : oracle_(oracle),
       pivot_(NULL), mediandist_(0),
-      left_child_(NULL), right_child_(NULL),
+      left_child_(NULL), right_child_(NULL), father_node_(father_node_point_),
       bucket_(NULL), CacheOptimizedBucket_(NULL)
 {
   CHECK(!data.empty());
@@ -395,11 +413,11 @@ VPTree<dist_t, SearchOracle>::VPNode::VPNode(
     }
 
     if (!left.empty()) {
-      left_child_ = new VPNode(level + 1, progress_bar, oracle_, space, left, max_pivot_select_attempts, BucketSize, ChunkBucket, use_random_center);
+      left_child_ = new VPNode(level + 1, progress_bar, oracle_, space, left, max_pivot_select_attempts, BucketSize, ChunkBucket, this, use_random_center);
     }
 
     if (!right.empty()) {
-      right_child_ = new VPNode(level + 1, progress_bar, oracle_, space, right, max_pivot_select_attempts, BucketSize, ChunkBucket, use_random_center);
+      right_child_ = new VPNode(level + 1, progress_bar, oracle_, space, right, max_pivot_select_attempts, BucketSize, ChunkBucket, this, use_random_center);
     }
   } else {
     CHECK_MSG(data.size() == 1, "Bug: expect the subset to contain exactly one element!");
@@ -411,6 +429,7 @@ template <typename dist_t, typename SearchOracle>
 VPTree<dist_t, SearchOracle>::VPNode::~VPNode() {
   delete left_child_;
   delete right_child_;
+  delete father_node_;
   ClearBucket(CacheOptimizedBucket_, bucket_);
 }
 
@@ -418,6 +437,11 @@ template <typename dist_t, typename SearchOracle>
 template <typename QueryType>
 void VPTree<dist_t, SearchOracle>::VPNode::GenericSearch(QueryType* query,
                                                          int& MaxLeavesToVisit) const {
+
+
+  VPtreeVisitTimes_test++; //每查询一次就自增一次。
+  //LOG(LIB_INFO) << "GenericSearch VPtreeVisitTimes_test          = " << VPtreeVisitTimes_test;
+
   if (MaxLeavesToVisit <= 0) return; // early termination
   if (bucket_) {
     --MaxLeavesToVisit;
@@ -467,6 +491,24 @@ void VPTree<dist_t, SearchOracle>::VPNode::GenericSearch(QueryType* query,
       left_child_->GenericSearch(query, MaxLeavesToVisit);
   }
 }
+
+template <typename dist_t, typename SearchOracle>
+//GenericConstructHash函数的实现  
+void VPTree<dist_t, SearchOracle>::VPNode::GenericConstructHash() {
+  if(left_child_ != NULL){
+    left_child_->GenericConstructHash();
+  }
+  if(right_child_ != NULL){
+    right_child_->GenericConstructHash();
+  }
+  return;
+  }
+
+// void VPTree::GenericConstructHash(VPNode* begin_pointer) {
+
+
+
+
 
 template class VPTree<float, PolynomialPruner<float> >;
 template class VPTree<int, PolynomialPruner<int> >;
