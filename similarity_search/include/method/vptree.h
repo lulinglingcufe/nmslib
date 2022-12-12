@@ -23,6 +23,8 @@
 #include "object.h"
 #include "params.h"
 #include "ported_boost_progress.h"
+#include "Keccak256.h"
+
 
 #define METH_VPTREE          "vptree"
 
@@ -86,13 +88,16 @@ class VPTree : public Index<dist_t> {
            size_t max_pivot_select_attempts,
            size_t BucketSize, bool ChunkBucket,
            VPNode* father_node_point_,
+           int node_id_,
            bool use_random_center);
     ~VPNode();
 
     template <typename QueryType>
     void GenericSearch(QueryType* query, int& MaxLeavesToVisit) const;
 
-    void GenericConstructHash();  
+    //void GenericConstructHash(); 
+    float GetHashValue();  
+    
 
    private:
     void CreateBucket(bool ChunkBucket, const ObjectVector& data, 
@@ -107,6 +112,10 @@ class VPTree : public Index<dist_t> {
      * should be good enough.
      */
     float         mediandist_;
+    float         node_hash_value_[2];
+    std::uint8_t  actualHash[Keccak256::HASH_LEN];
+    std::uint8_t  internal_node_Hash[Keccak256::HASH_LEN];
+    int           node_id_;
     VPNode*       left_child_;
     VPNode*       right_child_;
     VPNode*       father_node_;

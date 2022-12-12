@@ -118,6 +118,7 @@ namespace similarity {
 
 
 		std::uint8_t actualHash[Keccak256::HASH_LEN];
+        //2022-11-22-Keccak256方法.md: 把buffer 指针 转换为uint8_t 指针，(uint8_t *)
 		Keccak256::getHash(  (uint8_t *)data_rearranged_[curNodeNum]->buffer(), data_rearranged_[curNodeNum]->bufferlength(), actualHash);
 
         LOG(LIB_INFO) << "actualHash: " << actualHash;

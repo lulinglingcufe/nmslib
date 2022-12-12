@@ -19,6 +19,8 @@
 #include <sstream>
 #include <string>
 #include <cmath>
+#include <stdio.h>
+
 
 #include "portable_prefetch.h"
 #if defined(_WIN32) || defined(WIN32)
@@ -92,7 +94,7 @@ void VPTree<dist_t, SearchOracle>::CreateIndex(const AnyParams& IndexParams) {
   unique_ptr<ProgressDisplay>   progress_bar(PrintProgress_ ? 
                                               new ProgressDisplay(this->data_.size(), cerr):
                                               NULL);
-
+  LOG(LIB_INFO) << "This is  root test ";
   root_.reset(new VPNode(0,
                      progress_bar.get(), 
                      oracle_, 
@@ -100,17 +102,28 @@ void VPTree<dist_t, SearchOracle>::CreateIndex(const AnyParams& IndexParams) {
                      max_pivot_select_attempts_,
                      BucketSize_, ChunkBucket_,
                      NULL,
+                     0,
                      use_random_center_ /* use random center */));
 
 
   //把构造hash的递归函数放在这里
-  root_->GenericConstructHash();
+  //root_->GenericConstructHash();
+  
+
+
+
   //GenericConstructHash(root_);
-
-
   if (progress_bar) { // make it 100%
     (*progress_bar) += (progress_bar->expected_count() - progress_bar->count());
   }
+
+  float sum_value = 0;
+  sum_value = root_->GetHashValue();
+  LOG(LIB_INFO) << "sum_value is          = " << sum_value;
+  //相当于这里直接获取到merkle root 
+
+
+
 }
 
 
@@ -318,6 +331,8 @@ VPTree<dist_t, SearchOracle>::VPNode::VPNode(const SearchOracle& oracle)
       right_child_(NULL),
       bucket_(NULL),
       father_node_(NULL),
+      //node_hash_value_(0),
+      node_id_(0),
       CacheOptimizedBucket_(NULL) {}
 
 template <typename dist_t, typename SearchOracle>
@@ -329,10 +344,13 @@ VPTree<dist_t, SearchOracle>::VPNode::VPNode(
                                size_t max_pivot_select_attempts,
                                size_t BucketSize, bool ChunkBucket,
                                VPNode* father_node_point_,
+                               int node_id_,
                                bool use_random_center)
     : oracle_(oracle),
       pivot_(NULL), mediandist_(0),
       left_child_(NULL), right_child_(NULL), father_node_(father_node_point_),
+      node_id_(node_id_),
+      //node_hash_value_(0),
       bucket_(NULL), CacheOptimizedBucket_(NULL)
 {
   CHECK(!data.empty());
@@ -341,6 +359,15 @@ VPTree<dist_t, SearchOracle>::VPNode::VPNode(
     CreateBucket(ChunkBucket, data, progress_bar);
     return;
   }
+
+  //看一下有没有在Construct VPNode？
+  //LOG(LIB_INFO) << "Construct VPNode ";
+  //print node_id_
+  //LOG(LIB_INFO) << " VPNode node_id_:   "<< node_id_ ;
+
+
+
+
 
 
   if (data.size() >= 2) {
@@ -413,16 +440,47 @@ VPTree<dist_t, SearchOracle>::VPNode::VPNode(
     }
 
     if (!left.empty()) {
-      left_child_ = new VPNode(level + 1, progress_bar, oracle_, space, left, max_pivot_select_attempts, BucketSize, ChunkBucket, this, use_random_center);
+      left_child_ = new VPNode(level + 1, progress_bar, oracle_, space, left, max_pivot_select_attempts, BucketSize, ChunkBucket, this, node_id_+1 , use_random_center);
     }
 
     if (!right.empty()) {
-      right_child_ = new VPNode(level + 1, progress_bar, oracle_, space, right, max_pivot_select_attempts, BucketSize, ChunkBucket, this, use_random_center);
+      right_child_ = new VPNode(level + 1, progress_bar, oracle_, space, right, max_pivot_select_attempts, BucketSize, ChunkBucket, this, node_id_+2 ,use_random_center);
     }
   } else {
     CHECK_MSG(data.size() == 1, "Bug: expect the subset to contain exactly one element!");
     pivot_ = data[0];
   }
+
+
+  //在这里构建merkle的输入：制高点、中间值
+
+	char float_array[10];
+	sprintf(float_array, "%f", mediandist_);
+
+
+  char dest[528];
+  strcpy(dest, pivot_->buffer());
+
+  //LOG(LIB_INFO) << "dest1         = " << dest;
+  //LOG(LIB_INFO) << "dest2         = " << pivot_->buffer();
+  strcat(dest, float_array);
+  //LOG(LIB_INFO) << "dest         = " << dest;
+
+
+  //打印hash结果
+	//Keccak256::getHash(  (uint8_t *)pivot_->buffer(), pivot_->bufferlength(), actualHash);  
+  Keccak256::getHash(  (uint8_t *)dest, 528, actualHash);
+
+
+  //LOG(LIB_INFO) << "actualHash         = " << actualHash; //打印出来是乱码
+  //LOG(LIB_INFO) << "pivot_->bufferlength()         = " << pivot_->bufferlength();//都是528
+
+  //打印hash值
+  // for(int j = 0; j < 32; j++) {
+  // printf("%02X", actualHash[j]);
+  // }
+  // printf("\n");    
+ 
 }
 
 template <typename dist_t, typename SearchOracle>
@@ -473,6 +531,7 @@ void VPTree<dist_t, SearchOracle>::VPNode::GenericSearch(QueryType* query,
      */
 
 
+
     // after that outside
     if (right_child_ != NULL && oracle_.Classify(distQC, query->Radius(), mediandist_) != kVisitLeft)
        right_child_->GenericSearch(query, MaxLeavesToVisit);
@@ -494,21 +553,43 @@ void VPTree<dist_t, SearchOracle>::VPNode::GenericSearch(QueryType* query,
 
 template <typename dist_t, typename SearchOracle>
 //GenericConstructHash函数的实现  
-void VPTree<dist_t, SearchOracle>::VPNode::GenericConstructHash() {
-  if(left_child_ != NULL){
-    left_child_->GenericConstructHash();
+float VPTree<dist_t, SearchOracle>::VPNode::GetHashValue() {
+
+  LOG(LIB_INFO) << "Construct GetHashValue "<< this;
+  //print node_id_
+  LOG(LIB_INFO) << "GetHashValue  node_id_:    "<< node_id_;
+
+  if(left_child_ == NULL){
+    node_hash_value_ +=1;
+    LOG(LIB_INFO) << this << "  left_child_ is null   :"<<  node_hash_value_;
+
+    if(right_child_ != NULL){
+    LOG(LIB_INFO) << " VPNode only have  right_child_";
   }
-  if(right_child_ != NULL){
-    right_child_->GenericConstructHash();
   }
-  return;
+  if(right_child_ == NULL){
+    node_hash_value_ +=1;
+    LOG(LIB_INFO) << this << "  right_child_ is null   :"<<  node_hash_value_;
+
+    if(left_child_ != NULL){
+    LOG(LIB_INFO) << " VPNode only have  left_child_";
+  }
   }
 
-// void VPTree::GenericConstructHash(VPNode* begin_pointer) {
+  if (left_child_ != NULL  && right_child_ != NULL){
+    node_hash_value_ = left_child_->GetHashValue() + right_child_->GetHashValue();
+
+
+    //LOG(LIB_INFO) << "   node_hash_value_   :"<< node_hash_value_;
+
+    //在这里增加拼接hash的操作。
 
 
 
+  }
+  return node_hash_value_; 
 
+  }
 
 template class VPTree<float, PolynomialPruner<float> >;
 template class VPTree<int, PolynomialPruner<int> >;
