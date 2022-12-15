@@ -81,23 +81,28 @@ class VPTree : public Index<dist_t> {
     const size_t BalanceConst = 4; 
 
     VPNode(const SearchOracle& oracle);
-    VPNode(unsigned level,
+    VPNode(//unsigned level,
            ProgressDisplay* progress_bar,
            const SearchOracle&  oracle,
            const Space<dist_t>& space, const ObjectVector& data,
            size_t max_pivot_select_attempts,
            size_t BucketSize, bool ChunkBucket,
            VPNode* father_node_point_,
-           int node_id_,
+           unsigned level,
+           //int node_id_,
            bool use_random_center);
     ~VPNode();
 
     template <typename QueryType>
-    void GenericSearch(QueryType* query, int& MaxLeavesToVisit) const;
+    void GenericSearch(QueryType* query, int& MaxLeavesToVisit); //const;
 
     //void GenericConstructHash(); 
-    float GetHashValue();  
+    std::uint8_t * GetHashValue();  
     
+    std::uint8_t  node_hash_value_[Keccak256::HASH_LEN];
+    std::uint8_t  actualHash[Keccak256::HASH_LEN];
+    bool if_set_node_hash; //是否在查找的过程中，使用了这个节点
+    void RecursiveToConstructHash(unsigned i); 
 
    private:
     void CreateBucket(bool ChunkBucket, const ObjectVector& data, 
@@ -112,10 +117,11 @@ class VPTree : public Index<dist_t> {
      * should be good enough.
      */
     float         mediandist_;
-    float         node_hash_value_[2];
-    std::uint8_t  actualHash[Keccak256::HASH_LEN];
-    std::uint8_t  internal_node_Hash[Keccak256::HASH_LEN];
-    int           node_id_;
+    // std::uint8_t  node_hash_value_[Keccak256::HASH_LEN];
+    // std::uint8_t  actualHash[Keccak256::HASH_LEN];
+    // std::uint8_t  internal_node_Hash[Keccak256::HASH_LEN];
+    //int           node_id_;
+    unsigned level;
     VPNode*       left_child_;
     VPNode*       right_child_;
     VPNode*       father_node_;
