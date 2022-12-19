@@ -104,7 +104,7 @@ protected:
 
 private:
   template <typename QueryType>
-  void GenericSearch(QueryType* query, IdType) const;
+  void GenericSearch(QueryType* query, IdType) ;//const;
 
 };
 

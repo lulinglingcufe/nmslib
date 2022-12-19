@@ -44,6 +44,7 @@ class VPTree : public Index<dist_t> {
   VPTree(bool PrintProgress,
          Space<dist_t>& space,
          const ObjectVector& data,
+         //ObjectVector& data,
          bool use_random_center = true);
 
   void CreateIndex(const AnyParams& IndexParams) override;
@@ -102,7 +103,9 @@ class VPTree : public Index<dist_t> {
     std::uint8_t  node_hash_value_[Keccak256::HASH_LEN];
     std::uint8_t  actualHash[Keccak256::HASH_LEN];
     bool if_set_node_hash; //是否在查找的过程中，使用了这个节点
-    void RecursiveToConstructHash(unsigned i); 
+    void RecursiveToPrintHashLevel(unsigned i); 
+    void RecursiveToConstructHash(); 
+    int RecursivePrintHashTree(unsigned i); 
 
    private:
     void CreateBucket(bool ChunkBucket, const ObjectVector& data, 

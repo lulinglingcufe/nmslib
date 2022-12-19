@@ -26,6 +26,7 @@ template <typename dist_t>
 class Query {
  public:
   Query(const Space<dist_t>& space, const Object* query_object);
+  //Query(const Space<dist_t>& space,  Object* query_object);
   virtual ~Query();
 
   const Object* QueryObject() const;

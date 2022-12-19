@@ -54,6 +54,7 @@ public:
                             const string& SpaceType,
                             Space<dist_t>& space,
                             const ObjectVector& DataObjects) {
+                            //ObjectVector& DataObjects) {  
     if (Creators_.count(MethName)) {
       return Creators_[MethName](PrintProgress, SpaceType, space, DataObjects);
     } else {

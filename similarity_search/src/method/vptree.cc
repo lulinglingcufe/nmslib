@@ -54,6 +54,7 @@ const uint32_t VERSION_NUMBER = 2;
 
 int VPtreeVisitTimes_test = 0;
 int VPtreeVisitTimes_leaf = 0;
+int leaf_node_number = 0;
 unsigned MAX_LEVEL = 0;
 //char float_array[10];
 char dest[528];
@@ -181,11 +182,41 @@ void VPTree<dist_t, SearchOracle>::Search(RangeQuery<dist_t>* query, IdType) con
 template <typename dist_t, typename SearchOracle>
 void VPTree<dist_t, SearchOracle>::Search(KNNQuery<dist_t>* query, IdType) const {
   int mx = MaxLeavesToVisit_;
+
+  LOG(LIB_INFO) << "KNNQuery leaf_node_number          = " << leaf_node_number;
   root_->GenericSearch(query, mx);
   LOG(LIB_INFO) << "KNNQuery VPtreeVisitTimes_test          = " << VPtreeVisitTimes_test;
   LOG(LIB_INFO) << "KNNQuery VPtreeVisitTimes_leaf          = " << VPtreeVisitTimes_leaf;
   VPtreeVisitTimes_test = 0;  
   VPtreeVisitTimes_leaf = 0;
+
+  root_->RecursiveToConstructHash();//构建完整的验证merkle tree
+
+  //打印完整的验证merkle tree
+  for (unsigned i=0; i<=MAX_LEVEL; i++){
+  printf("level  %d  :",i);
+  root_->RecursiveToPrintHashLevel(i);
+  printf("\n");
+  }
+
+  //打印发送给用户的验证merkle tree
+  for (unsigned i=0; i<=MAX_LEVEL; i++){
+  printf("level  %d  :",i);
+  root_->RecursivePrintHashTree(i);
+  printf("\n");
+  }
+  //root_->RecursivePrintHashTree(); 
+
+  
+            // LOG(LIB_INFO) << "root Hash: ";
+            //  for(int j = 0; j < 32; j++) {
+            //      printf("%02X", sum_value[j]);
+            //     }
+            //     printf("\n");   
+
+
+
+
 }
 
 template <typename dist_t, typename SearchOracle>
@@ -393,9 +424,11 @@ VPTree<dist_t, SearchOracle>::VPNode::VPNode(
   CHECK(!data.empty());
 
   if (!data.empty() && data.size() <= BucketSize) {
-    LOG(LIB_INFO) << "We have a leaf node:  "<< this;// <<"  with size :   " <<data.size() <<" with space:    "<<TotalSpaceUsed(data); 
+    //如果是叶子节点
+    //LOG(LIB_INFO) << "We have a leaf node:  "<< this;// <<"  with size :   " <<data.size() <<" with space:    "<<TotalSpaceUsed(data); 
     CreateBucket(ChunkBucket, data, progress_bar);
     Keccak256::getHash(  (uint8_t *)CacheOptimizedBucket_, TotalSpaceUsed(data), actualHash);
+    leaf_node_number++;
   //打印actualHash值
   // for(int j = 0; j < 32; j++) {
   // printf("%02X", actualHash[j]);
@@ -474,7 +507,7 @@ VPTree<dist_t, SearchOracle>::VPNode::VPNode(
      * it is more efficient to put everything into a single bucket.
      */
     size_t LeastSize = dp.size() / BalanceConst;
-    LOG(LIB_INFO) << "Construct actualHash "<< this;
+    //LOG(LIB_INFO) << "Construct actualHash "<< this;
   //在这里构建merkle的输入：制高点、中间值:这里好奇怪？
 	char float_array[10];
 	sprintf(float_array, "%f", mediandist_);
@@ -485,10 +518,10 @@ VPTree<dist_t, SearchOracle>::VPNode::VPNode(
   Keccak256::getHash(  (uint8_t *)dest, 528, actualHash);
   //LOG(LIB_INFO) << "pivot_->bufferlength()         = " << pivot_->bufferlength();//都是528  
   //打印actualHash值
-  for(int j = 0; j < 32; j++) {
-  printf("%02X", actualHash[j]);
-  }
-  printf("\n"); 
+  // for(int j = 0; j < 32; j++) {
+  // printf("%02X", actualHash[j]);
+  // }
+  // printf("\n"); 
 
 
 
@@ -668,48 +701,99 @@ std::uint8_t * VPTree<dist_t, SearchOracle>::VPNode::GetHashValue() {
 
   }
 
+template <typename dist_t, typename SearchOracle>
+//template <typename QueryType>
+void VPTree<dist_t, SearchOracle>::VPNode::RecursiveToPrintHashLevel(unsigned i) {
+  //用这个函数把hash tree打印出来？
+
+   if(left_child_ == NULL){
+    if (if_set_node_hash && level == i){
+             for(int j = 0; j < 1; j++) {
+                 printf("%02X", node_hash_value_[j]);
+                }
+                printf("----");
+    }
+  }
+  else if(left_child_ != NULL  && right_child_ != NULL){
+    if(if_set_node_hash && level == i){
+             for(int j = 0; j < 1; j++) {
+                 printf("%02X", node_hash_value_[j]);
+                }
+                printf("----");
+    }
+    if(level < i){
+    left_child_->RecursiveToPrintHashLevel(i);
+    right_child_->RecursiveToPrintHashLevel(i);
+    }
+
+  }
+}
+
 
 template <typename dist_t, typename SearchOracle>
-void VPTree<dist_t, SearchOracle>::VPNode::RecursiveToConstructHash(unsigned i) {
-    if (level == (MAX_LEVEL-1) ){  
-      //找到父亲，如果父亲没有hash，那么进行hash操作。
-      if(father_node_->if_set_node_hash == false){
-        
+//template <typename QueryType>
+void VPTree<dist_t, SearchOracle>::VPNode::RecursiveToConstructHash() {
+  //用这个函数把hash tree打印出来？
+if(if_set_node_hash && father_node_ !=NULL){
 
-        memcpy(internal_node_hash_value_, (father_node_->left_child_)->actualHash, Keccak256::HASH_LEN);
-        memcpy(internal_node_hash_value_+ Keccak256::HASH_LEN, (father_node_->right_child_)->actualHash, Keccak256::HASH_LEN);
-        memcpy(internal_node_hash_value_+ 2*(Keccak256::HASH_LEN), father_node_->actualHash, Keccak256::HASH_LEN);
-
-        Keccak256::getHash(  (uint8_t *)internal_node_hash_value_, (Keccak256::HASH_LEN)*3, father_node_->node_hash_value_);
-
-        //LOG(LIB_INFO) << "   Keccak256::getHash(  (uint8_t *)internal_node_hash_value_";
-
-        father_node_->if_set_node_hash = true;
-
-        //delete internal_node_hash_value_; 
-
-             LOG(LIB_INFO) << "This is internal node Hash: ";
-             for(int j = 0; j < 32; j++) {
-                 printf("%02X", father_node_->node_hash_value_[j]);
-                }
-                printf("\n"); 
-
-        //delete internal_node_hash_value_; 
-      }
-
-    } else if( level == i ){
-      //找到父亲，如果父亲没有hash，那么进行hash操作。
-      if(father_node_->if_set_node_hash == false){
-        
-        //delete internal_node_hash_value_; 
-    } 
-    }
-    else{
-    left_child_->RecursiveToConstructHash(i);
-    right_child_->RecursiveToConstructHash(i);
-    }
-    
+if (father_node_->left_child_->if_set_node_hash == false){
+  father_node_->left_child_->if_set_node_hash = true;
 }
+if (father_node_->right_child_->if_set_node_hash == false){
+  father_node_->right_child_->if_set_node_hash = true;
+}
+
+}
+
+ if(left_child_ != NULL  && right_child_ != NULL){
+    left_child_->RecursiveToConstructHash();
+    right_child_->RecursiveToConstructHash();
+
+  }
+}
+
+
+
+
+
+
+
+template <typename dist_t, typename SearchOracle>
+//template <typename QueryType>
+int VPTree<dist_t, SearchOracle>::VPNode::RecursivePrintHashTree(unsigned i) {
+   if(left_child_ == NULL){
+    if (if_set_node_hash){
+      LOG(LIB_INFO) << "This is hash in level :  "<< level;
+             for(int j = 0; j < 32; j++) {
+                 printf("%02X", node_hash_value_[j]);
+                }
+                printf("\n");        
+      return 1;
+    }
+    return 0;
+  }
+  else if(left_child_ != NULL  && right_child_ != NULL){
+    int left = left_child_->RecursivePrintHashTree();
+    int right = right_child_->RecursivePrintHashTree();
+  
+   if (left==0 && right==0 ){
+    if (if_set_node_hash){
+      LOG(LIB_INFO) << "This is internal hash in level :  "<< level;
+             for(int j = 0; j < 32; j++) {
+                 printf("%02X", node_hash_value_[j]);
+                }
+                printf("\n");        
+      return 1;      
+    }
+    return 0;
+   }
+   return 1;   
+  }
+}
+
+
+
+
 
 
 template class VPTree<float, PolynomialPruner<float> >;
