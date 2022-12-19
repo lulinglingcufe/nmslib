@@ -199,12 +199,12 @@ void VPTree<dist_t, SearchOracle>::Search(KNNQuery<dist_t>* query, IdType) const
   printf("\n");
   }
 
-  //打印发送给用户的验证merkle tree
-  for (unsigned i=0; i<=MAX_LEVEL; i++){
-  printf("level  %d  :",i);
-  root_->RecursivePrintHashTree(i);
-  printf("\n");
-  }
+  //打印发送给用户的验证merkle tree，只需要发送对于验证树来说的叶子，给用户即可
+  // for (unsigned i=MAX_LEVEL; i<=MAX_LEVEL; i++){
+  // printf("level  %d  :",i);
+  // root_->RecursiveToPrintHashLevel(i);
+  // printf("\n");
+  // }
   //root_->RecursivePrintHashTree(); 
 
   
@@ -716,10 +716,15 @@ void VPTree<dist_t, SearchOracle>::VPNode::RecursiveToPrintHashLevel(unsigned i)
   }
   else if(left_child_ != NULL  && right_child_ != NULL){
     if(if_set_node_hash && level == i){
-             for(int j = 0; j < 1; j++) {
-                 printf("%02X", node_hash_value_[j]);
-                }
-                printf("----");
+            //  for(int j = 0; j < 1; j++) {
+            //      printf("%02X", node_hash_value_[j]);
+            //     }
+    if(left_child_->if_set_node_hash == false && right_child_->if_set_node_hash == false){
+             printf("LeafO----");
+             } 
+             else{
+             printf("O----");
+             }                
     }
     if(level < i){
     left_child_->RecursiveToPrintHashLevel(i);
@@ -738,9 +743,14 @@ if(if_set_node_hash && father_node_ !=NULL){
 
 if (father_node_->left_child_->if_set_node_hash == false){
   father_node_->left_child_->if_set_node_hash = true;
+  //用户没有访问过，但是为了构造merkle tree必须发送给用户的VO
+
 }
 if (father_node_->right_child_->if_set_node_hash == false){
   father_node_->right_child_->if_set_node_hash = true;
+  //用户没有访问过，但是为了构造merkle tree必须发送给用户的VO
+
+
 }
 
 }
@@ -760,7 +770,7 @@ if (father_node_->right_child_->if_set_node_hash == false){
 
 template <typename dist_t, typename SearchOracle>
 //template <typename QueryType>
-int VPTree<dist_t, SearchOracle>::VPNode::RecursivePrintHashTree(unsigned i) {
+int VPTree<dist_t, SearchOracle>::VPNode::RecursivePrintHashTree() {
    if(left_child_ == NULL){
     if (if_set_node_hash){
       LOG(LIB_INFO) << "This is hash in level :  "<< level;

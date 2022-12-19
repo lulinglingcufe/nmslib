@@ -105,7 +105,7 @@ class VPTree : public Index<dist_t> {
     bool if_set_node_hash; //是否在查找的过程中，使用了这个节点
     void RecursiveToPrintHashLevel(unsigned i); 
     void RecursiveToConstructHash(); 
-    int RecursivePrintHashTree(unsigned i); 
+    int RecursivePrintHashTree(); 
 
    private:
     void CreateBucket(bool ChunkBucket, const ObjectVector& data, 
