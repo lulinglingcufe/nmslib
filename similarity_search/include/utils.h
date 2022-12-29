@@ -32,6 +32,8 @@
 #include <climits>
 #include <stdexcept>
 #include <memory>
+#include <iostream>
+
 
 #include "idtype.h"
 
@@ -302,23 +304,47 @@ inline void WriteField(ostream& out, const string& fieldName, const FieldType& f
 
 template <typename T> 
 void writeBinaryPOD(ostream& out, const T& podRef) {
-  out.write((char*)&podRef, sizeof(T));
+  //printf("We write out.write \n");
+  out.write((char*)&podRef, sizeof(T)); //所以所有的都是用这个函数在写的吗？好神奇。我们再试试？
 }
 
 template <typename T> 
 static void readBinaryPOD(istream& in, T& podRef) {
+  //printf("We read in.read \n");
+  //LOG(LIB_INFO) << "We read in.read  ";
+  //std::cout << "We read in.read " << std::endl;
   in.read((char*)&podRef, sizeof(T));
 }
 
 template <typename T>
 static void readBinaryPOD(const void* in, T& podRef) {
+  printf("We read std::memcpy \n");
+  //LOG(LIB_INFO) << "We read std::memcpy  ";
   std::memcpy((char*)&podRef, in, sizeof(T));
+  //std::cout << "We read std::memcpy " << std::endl;
 }
 
 template <typename T>
+static void readBinaryPODtest(const void* in, T& podRef) {
+  std::memcpy((char*)&podRef, in, sizeof(T));
+}
+//template <typename T>
+// static void readBinaryPODtest(const void* in, std::uint8_t* podRef) {
+//   std::memcpy(podRef, in, 32);
+// }
+
+template <typename T>
 void writeBinaryPOD(void* out, const T& podRef) {
+  printf("We write std::memcpy \n");
   std::memcpy(out, (char*)&podRef, sizeof(T));
 }
+
+template <typename T>
+void writeBinaryPODuint8_t(void* out, const T& podRef) {
+  printf("We write std::memcpy \n");
+  std::memcpy(out, (std::uint8_t*)&podRef, sizeof(T));
+}
+
 
 /**/
 

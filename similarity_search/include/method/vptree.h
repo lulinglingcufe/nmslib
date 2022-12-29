@@ -58,6 +58,9 @@ class VPTree : public Index<dist_t> {
   void SaveIndex(const string& location) override;
   void LoadIndex(const string& location) override;
 
+  void SaveIndexVO() const;
+  void LoadIndexVO() const;
+
   void Search(RangeQuery<dist_t>* query, IdType) const override;
   void Search(KNNQuery<dist_t>* query, IdType) const override;
 
@@ -99,10 +102,11 @@ class VPTree : public Index<dist_t> {
 
     //void GenericConstructHash(); 
     std::uint8_t * GetHashValue();  
+    std::uint8_t * VerifyHashValue(); 
     
     std::uint8_t  node_hash_value_[Keccak256::HASH_LEN];
     std::uint8_t  actualHash[Keccak256::HASH_LEN];
-    bool if_set_node_hash; //是否在查找的过程中，使用了这个节点
+    int if_set_node_hash; //是否在查找的过程中，使用了这个节点
     void RecursiveToPrintHashLevel(unsigned i); 
     void RecursiveToConstructHash(); 
     int RecursivePrintHashTree(); 
@@ -150,7 +154,16 @@ class VPTree : public Index<dist_t> {
   vector<string>  QueryTimeParams_;
 
   VPNode* LoadNodeData(std::ifstream& input, bool ChunkBucket, const vector<IdType>& IdMapper) const;
+
+
+  VPNode* LoadVONodeData(std::ifstream& input, bool ChunkBucket, const vector<IdType>& IdMapper) const;
+  //VPNode* LoadVONodeData(std::ifstream& input, bool ChunkBucket, vector<IdType>& IdMapper);
+
+
   void    SaveNodeData(std::ofstream& output, const VPNode* node) const;
+
+  
+  void    SaveVONodeData(std::ofstream& output, const VPNode* node) const;
 
   // disable copy and assign
   DISABLE_COPY_AND_ASSIGN(VPTree);

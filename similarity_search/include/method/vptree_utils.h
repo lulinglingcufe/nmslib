@@ -24,6 +24,8 @@
 
 namespace similarity {
 
+
+
 inline size_t SelectVantagePoint(const ObjectVector& data, bool use_random_center) {
   CHECK(!data.empty());
   return use_random_center ? RandomInt() % data.size() : data.size() - 1;
