@@ -103,6 +103,10 @@ class VPTree : public Index<dist_t> {
     //void GenericConstructHash(); 
     std::uint8_t * GetHashValue();  
     std::uint8_t * VerifyHashValue(); 
+    std::uint8_t * GetHashValueTest(); 
+
+    std::uint8_t * GetHashValueForVO();
+    std::uint8_t * GetHashValueForVOTest();
     
     std::uint8_t  node_hash_value_[Keccak256::HASH_LEN];
     std::uint8_t  actualHash[Keccak256::HASH_LEN];
@@ -157,6 +161,7 @@ class VPTree : public Index<dist_t> {
 
 
   VPNode* LoadVONodeData(std::ifstream& input, bool ChunkBucket, const vector<IdType>& IdMapper) const;
+  VPNode* LoadVONodeDataTest(std::ifstream& input, bool ChunkBucket, const vector<IdType>& IdMapper) const;
   //VPNode* LoadVONodeData(std::ifstream& input, bool ChunkBucket, vector<IdType>& IdMapper);
 
 
@@ -164,6 +169,7 @@ class VPTree : public Index<dist_t> {
 
   
   void    SaveVONodeData(std::ofstream& output, const VPNode* node) const;
+  void    SaveVONodeDataTest(std::ofstream& output, const VPNode* node) const;
 
   // disable copy and assign
   DISABLE_COPY_AND_ASSIGN(VPTree);
