@@ -21,7 +21,7 @@
 #include <cmath>
 #include <stdio.h>
 #include <unistd.h>
-
+#include <cstdio>
 
 #include "portable_prefetch.h"
 #if defined(_WIN32) || defined(WIN32)
@@ -459,7 +459,9 @@ VPTree<dist_t, SearchOracle>::SaveVONodeDataTest(
   }
 
   CHECK(node != nullptr);
-  writeBinaryPOD(output, node->mediandist_);
+  sprintf(float_array, "%f", node->mediandist_);
+  writeBinaryPOD(output, float_array);
+  //writeBinaryPOD(output, node->mediandist_);
   writeBinaryPOD(output, node->if_set_node_hash);
 
 //如果是凑数的，只需要存储 node_hash。也无需遍历了。
@@ -542,8 +544,11 @@ VPTree<dist_t, SearchOracle>::LoadVONodeDataTest(std::ifstream& input, bool Chun
     CHECK(pivotId == PIVOT_ID_NULL_PIVOT);
   }
 
-  float mediandist;
-  readBinaryPOD(input, mediandist);
+  
+  readBinaryPOD(input, float_array);
+  //readBinaryPOD(input, mediandist);
+  float mediandist = atof(float_array);
+
   node->mediandist_ = mediandist;
   int if_set_node_hash;
   readBinaryPOD(input, if_set_node_hash);
@@ -1014,13 +1019,13 @@ std::uint8_t * VPTree<dist_t, SearchOracle>::VPNode::GetHashValueForVOTest() {
     //LOG(LIB_INFO) << "right_child_->VOTest-> " << this <<"  :";
     memcpy(internal_node_hash_value_+ Keccak256::HASH_LEN, right_child_->GetHashValueForVOTest(), Keccak256::HASH_LEN);
 
-    LOG(LIB_INFO) << "actualHash: "<< this <<"  :";
+    //LOG(LIB_INFO) << "actualHash: "<< this <<"  :";
     memcpy(internal_node_hash_value_+ Keccak256::HASH_LEN + Keccak256::HASH_LEN, actualHash, Keccak256::HASH_LEN);
 
-             for(int j = 0; j < 32; j++) {
-                 printf("%02X", actualHash[j]);
-                }
-                printf("\n"); 
+            //  for(int j = 0; j < 32; j++) {
+            //      printf("%02X", actualHash[j]);
+            //     }
+            //     printf("\n"); 
 
     std::uint8_t  actualHash_test_[Keccak256::HASH_LEN];
 
@@ -1033,12 +1038,16 @@ std::uint8_t * VPTree<dist_t, SearchOracle>::VPNode::GetHashValueForVOTest() {
          printf("actualHash error!!!!! \n"); 
       }
     }
+
+    //LOG(LIB_INFO) << "mediandist_:  "<< mediandist_;
+    //LOG(LIB_INFO) << "pivot_->bufferlength()         = " << pivot_->bufferlength();//都是528  
+
     //打印 actualHash_test_ hash结果
-    LOG(LIB_INFO) << "actualHash from mediandist_: "<< this <<"  :";
-                 for(int j = 0; j < 32; j++) {
-                 printf("%02X", actualHash_test_[j]);
-                }
-                printf("\n"); 
+    // LOG(LIB_INFO) << "actualHash from mediandist_: "<< this <<"  :";
+    //              for(int j = 0; j < 32; j++) {
+    //              printf("%02X", actualHash_test_[j]);
+    //             }
+    //             printf("\n"); 
 
     //memcpy(internal_node_hash_value_+ Keccak256::HASH_LEN + Keccak256::HASH_LEN, actualHash, Keccak256::HASH_LEN);
 
