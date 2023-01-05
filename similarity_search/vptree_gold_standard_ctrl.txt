@@ -1,0 +1,18 @@
+Space:SpaceLp: p = 2 do we have a special implementation for this p? : 1
+DataFile:../sample_data/final128_10K.txt
+DataFileQty:10000
+QueryFile:
+TestSetQty:1
+RangeQty:0
+KNNQty:1
+QueryQty:3
+2756 3497 6866
+TestSetId:0
+ThreadTestQty:1
+Note:k=10eps=0
+SeqSearchTime:647
+GoldStandQty:100
+SeqSearchTime:534
+GoldStandQty:100
+SeqSearchTime:556
+GoldStandQty:100

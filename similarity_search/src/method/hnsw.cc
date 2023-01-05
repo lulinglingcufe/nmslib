@@ -27,6 +27,7 @@
 #include <iostream>
 #include <memory>
 
+#include "Keccak256.h"
 #include "portable_prefetch.h"
 #include "portable_simd.h"
 #include "knnquery.h"
@@ -467,6 +468,32 @@ namespace similarity {
         LOG(LIB_INFO) << "Finished making optimized index";
         LOG(LIB_INFO) << "Maximum level = " << enterpoint_->level;
         LOG(LIB_INFO) << "Total memory allocated for optimized index+data: " << (total_memory_allocated >> 20) << " Mb";
+        LOG(LIB_INFO) << "ElList_.size() = " << ElList_.size();
+
+        // for (int i = 0; i < ElList_.size(); i++) {
+        //     LOG(LIB_INFO) << "ElList_[i]->allFriends_->size() = " << ElList_[i]->allFriends_[0].size();
+        //     LOG(LIB_INFO) << "1  = " << ElList_[i]->allFriends_[1].size();
+        //     LOG(LIB_INFO) << "2  = " << ElList_[i]->allFriends_[2].size();
+        //     LOG(LIB_INFO) << "3  = " << ElList_[i]->allFriends_[3].size();
+        // }
+
+        std::uint8_t actualHash[Keccak256::HASH_LEN];
+        Keccak256::getHash(  (uint8_t *)ElList_[100]->getData()->buffer(), ElList_[100]->getData()->bufferlength(), actualHash);
+
+
+       LOG(LIB_INFO) << "actualHash  :  ";
+                 for(int j = 0; j < 32; j++) {
+                 printf("%02X", actualHash[j]);
+                }
+                printf("\n");  
+
+        // for (int i = 0; i < ElList_.size(); i++) {
+        //     printf("value of a_static: %s\n", ElList_[i]->getData()->buffer());
+        // }
+
+
+
+
     }
 
     template <typename dist_t>
@@ -777,6 +804,9 @@ namespace similarity {
     template <typename dist_t>
     void
     Hnsw<dist_t>::SaveOptimizedIndex(std::ostream& output) {
+
+        LOG(LIB_INFO) << "SaveOptimizedIndex  :  ";
+
         totalElementsStored_ = ElList_.size();
 
         writeBinaryPOD(output, totalElementsStored_);
@@ -808,9 +838,13 @@ namespace similarity {
 
     }
 
+
     template <typename dist_t>
     void
     Hnsw<dist_t>::SaveRegularIndexBin(std::ostream& output) {
+
+        LOG(LIB_INFO) << "SaveRegularIndexBin  :  ";
+
         totalElementsStored_ = ElList_.size();
 
         writeBinaryPOD(output, totalElementsStored_);
@@ -819,6 +853,8 @@ namespace similarity {
         writeBinaryPOD(output, M_);
         writeBinaryPOD(output, maxM_);
         writeBinaryPOD(output, maxM0_);
+
+
 
         for (unsigned i = 0; i < totalElementsStored_; ++i) {
             const HnswNode& node = *ElList_[i];
@@ -830,21 +866,45 @@ namespace similarity {
                     "maxlevel_ (" + ConvertToString(maxlevel_) + ") < node.allFriends_.size() (" + ConvertToString(currlevel));
                     */
             writeBinaryPOD(output, currlevel);
+            char buffer_test[400];
+            int iLength = 0;
+            //iLength += std::sprintf(buffer_test,"%d",1);
+            iLength += std::sprintf(&buffer_test[iLength],"%d",currlevel);//static_cast<char>(currlevel)
+            LOG(LIB_INFO) << "This is currlevel:  " << currlevel;
+            //std::printf("n_char: %s \n", buffer_test);
+            
+
             for (unsigned level = 0; level <= currlevel; ++level) {
                 const auto& friends = node.allFriends_[level];
                 unsigned friendQty = friends.size();
-                writeBinaryPOD(output, friendQty);
+                writeBinaryPOD(output, friendQty); //这个好像是一层里面朋友的数量？
+                iLength += std::sprintf(&buffer_test[iLength],"%d",friendQty);
+                //LOG(LIB_INFO) << "This is friendQty:  " << friendQty;
+                //std::printf("n_char: %s \n", buffer_test);
+
                 for (unsigned k = 0; k < friendQty; ++k) {
-                    IdType friendId = friends[k]->id_;
+                    IdType friendId = friends[k]->id_;  //朋友的id。
                     writeBinaryPOD(output, friendId);
+                    iLength += std::sprintf(&buffer_test[iLength],"%d",friendId);
+                    //LOG(LIB_INFO) << "This is friendId:  " << friendId;
                 }
             }
+
+
+            //std::printf("n_char: %s \n", buffer_test);
         }
+
+         
+
+
     }
+
 
     template <typename dist_t>
     void
     Hnsw<dist_t>::SaveRegularIndexText(std::ostream& output) {
+
+        LOG(LIB_INFO) << "SaveRegularIndexText  :  ";
 
         size_t lineNum = 0;
 
@@ -944,7 +1004,7 @@ namespace similarity {
     template <typename dist_t>
     void
     Hnsw<dist_t>::LoadRegularIndexBin(std::istream& input) {
-        LOG(LIB_INFO) << "Loading regular index.";
+        LOG(LIB_INFO) << "Loading regular index bin.";
         readBinaryPOD(input, totalElementsStored_);
         readBinaryPOD(input, maxlevel_);
         readBinaryPOD(input, enterpointId_);
@@ -1028,7 +1088,7 @@ namespace similarity {
     template <typename dist_t>
     void
     Hnsw<dist_t>::LoadOptimizedIndex(std::istream& input) {
-        LOG(LIB_INFO) << "Loading optimized index.";
+        LOG(LIB_INFO) << "Loading optimized index Here.";
 
         readBinaryPOD(input, totalElementsStored_);
         readBinaryPOD(input, memoryPerObject_);

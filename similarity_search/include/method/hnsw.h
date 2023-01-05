@@ -72,7 +72,7 @@ namespace similarity {
 
     class HnswNode {
     public:
-        HnswNode(const Object *Obj, size_t id)
+        HnswNode(const Object *Obj, size_t id) //构造函数
         {
             data_ = Obj;
             id_ = id;
