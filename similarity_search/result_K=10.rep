@@ -4,8 +4,8 @@ hnsw
 Index parameters:      M=24,efConstruction=100,indexThreadQty=1,searchMethod=3
 Query-time parameters: efSearch=50
 ===================================
-# of points: 9997
-# of queries: 3
+# of points: 9999
+# of queries: 1
 ------------------------------------
 Recall:            1 -> [1 1]
 Recall@1:          1 -> [1 1]
@@ -14,11 +14,11 @@ ClassAccuracy:     0 -> [0 0]
 RelPosError:       1 -> [1 	1]
 NumCloser:         0 -> [0 	0]
 ------------------------------------
-QueryTime:         0.1 -> [0.07 	0.13]
-QueryPerSec:       10135.1 -> [10135.1 	10135.1]
-DistComp:          0 -> [-0 	0]
+QueryTime:         5.22 -> [5.21 	5.23]
+QueryPerSec:       191.5 -> [191.5 	191.5]
+DistComp:          0 -> [-0.01 	0.01]
 ------------------------------------
-ImprEfficiency:    4.68 -> [4.68 	4.68]
+ImprEfficiency:    0.09 -> [0.09 	0.09]
 ImprDistComp:      inf -> [inf 	inf]
 ------------------------------------
 Memory Usage:      17.63 MB

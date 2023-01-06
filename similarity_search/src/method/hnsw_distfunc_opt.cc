@@ -44,20 +44,22 @@
 using std::uint8_t;
 using std::setfill;
 using std::setw;
+using std::set;
 
 
 //#define DIST_CALC
 namespace similarity {
 
-    int nodeCount = 0;
-    //std::uint8_t * actualHashArray[1000];
-    //int searchCount = 0;
+
+
+
 
     template <typename dist_t>
     void
     Hnsw<dist_t>::SearchOld(KNNQuery<dist_t> *query, bool normalize)
     {
         LOG(LIB_INFO) << "This is SearchOld: ";
+                int nodeCount = 0;
 
         float *pVectq = (float *)((char *)query->QueryObject()->data());
         TMP_RES_ARRAY(TmpRes);
@@ -84,22 +86,31 @@ namespace similarity {
                 int size = *data;
                 for (int j = 1; j <= size; j++) {
                     PREFETCH(data_level0_memory_ + (*(data + j)) * memoryPerObject_ + offsetData_, _MM_HINT_T0);
-                }
+                }//预先把朋友的data值取出来
+
+
 #ifdef DIST_CALC
                 query->distance_computations_ += size;
 #endif
 
                 for (int j = 1; j <= size; j++) {
-                    int tnum = *(data + j);
+                    int tnum = *(data + j);//获得朋友的id
 
                     dist_t d = (fstdistfunc_(
-                        pVectq, (float *)(data_level0_memory_ + tnum * memoryPerObject_ + offsetData_ + 16), qty, TmpRes));
+                        pVectq, (float *)(data_level0_memory_ + tnum * memoryPerObject_ + offsetData_ + 16), qty, TmpRes)); //获取朋友的data值，来和query计算距离
+
+
                     if (d < curdist) {
                         curdist = d;
                         curNodeNum = tnum;
                         changed = true;
                     }
                 }
+
+
+
+
+
             }
         }
 
@@ -181,11 +192,8 @@ namespace similarity {
     {
         // WallClockTimer wtm;
         // wtm.reset();
-
-        //hash
-        //LOG(LIB_INFO) << "This is SearchV1Merge: ";
-        //std::uint8_t actualHash[Keccak256::HASH_LEN];
-
+        set<int> tum_set;
+        int nodeCount = 0;
 
         float *pVectq = (float *)((char *)query->QueryObject()->data());
         TMP_RES_ARRAY(TmpRes);
@@ -197,10 +205,13 @@ namespace similarity {
 
         VisitedList *vl = visitedlistpool->getFreeVisitedList();
         vl_type *massVisited = vl->mass;
-        vl_type currentV = vl->curV;
+        vl_type currentV = vl->curV;  //这个是啥来着?我忘了。
 
         int maxlevel1 = maxlevel_;
         int curNodeNum = enterpointId_;
+
+
+        tum_set.insert(enterpointId_);
         nodeCount++;
 
         dist_t curdist = (fstdistfunc_(
@@ -211,20 +222,24 @@ namespace similarity {
             while (changed) {
                 changed = false;
                 int *data = (int *)(linkLists_[curNodeNum] + (maxM_ + 1) * (i - 1) * sizeof(int));
-                int size = *data;
+                //也就是说data是一个int数组？每一个值都是enterpointId_节点在（某）层的朋友？
+                int size = *data;  //enterpointId_节点在（某）层的朋友的数量。
                 for (int j = 1; j <= size; j++) {
                     PREFETCH(data_level0_memory_ + (*(data + j)) * memoryPerObject_ + offsetData_, _MM_HINT_T0);
-                }
+                }//预先把朋友的data值取出来。
 #ifdef DIST_CALC
                 query->distance_computations_ += size;
 #endif
 
                 for (int j = 1; j <= size; j++) {
                     int tnum = *(data + j);
+                    //tnum就是enterpointId_节点的朋友的id。
+                    tum_set.insert(tnum);
                     nodeCount++;
 
                     dist_t d = (fstdistfunc_(
-                        pVectq, (float *)(data_level0_memory_ + tnum * memoryPerObject_ + offsetData_ + 16), qty, TmpRes));
+                        pVectq, (float *)(data_level0_memory_ + tnum * memoryPerObject_ + offsetData_ + 16), qty, TmpRes)); //计算朋友们和query节点之间的距离
+
                     if (d < curdist) {
                         curdist = d;
                         curNodeNum = tnum;
@@ -240,11 +255,12 @@ namespace similarity {
         int_fast32_t currElem = 0;
 
         typedef typename SortArrBI<dist_t, int>::Item QueueItem;
-        vector<QueueItem> &queueData = sortedArr.get_data();
+        vector<QueueItem> &queueData = sortedArr.get_data(); //队列
         vector<QueueItem> itemBuff(1 + max(maxM_, maxM0_));
 
-        massVisited[curNodeNum] = currentV;
+        massVisited[curNodeNum] = currentV;  //设置编号为curNodeNum的节点已经访问过了。
 
+        //当candidates里不存在任何元素，循环结束???
         while (currElem < min(sortedArr.size(), ef_)) {
             auto &e = queueData[currElem];
             CHECK(!e.used);
@@ -264,17 +280,21 @@ namespace similarity {
 
             for (int j = 1; j <= size; j++) {
                 int tnum = *(data + j);
+                //把当前候选者这个level的所有friends取出来 [level][]；tnum是一个朋友的id
+
                 PREFETCH((char *)(massVisited + *(data + j + 1)), _MM_HINT_T0);
                 PREFETCH(data_level0_memory_ + (*(data + j + 1)) * memoryPerObject_ + offsetData_, _MM_HINT_T0);
-                if (!(massVisited[tnum] == currentV)) {
+                if (!(massVisited[tnum] == currentV)) {  //如果id为tnum的朋友没有被访问过：
 #ifdef DIST_CALC
                     query->distance_computations_++;
 #endif
-                    massVisited[tnum] = currentV;
+                    massVisited[tnum] = currentV;  //设置编号为tnum的节点已经访问过了。
+                    tum_set.insert(tnum);
                     nodeCount++;
 
                     char *currObj1 = (data_level0_memory_ + tnum * memoryPerObject_ + offsetData_);
                     dist_t d = (fstdistfunc_(pVectq, (float *)(currObj1 + 16), qty, TmpRes));
+                    //计算编号为tnum的节点与query节点之间的距离。
 
                     if (d < topKey || sortedArr.size() < ef_) {
                         CHECK_MSG(itemBuff.size() > itemQty,
@@ -314,62 +334,26 @@ namespace similarity {
 
         for (int_fast32_t i = 0; i < query->GetK() && i < sortedArr.size(); ++i) {
             int tnum = queueData[i].data;
+            //LOG(LIB_INFO) << "int tnum = queueData[i].data  :  "<< tnum;
             // char *currObj = (data_level0_memory_ + tnum*memoryPerObject_ + offsetData_);
             // query->CheckAndAddToResult(queueData[i].key, new Object(currObj));
             query->CheckAndAddToResult(queueData[i].key, data_rearranged_[tnum]);
-
-            // //打印hash结果
-		    // Keccak256::getHash(  (uint8_t *)data_rearranged_[tnum]->buffer(), data_rearranged_[tnum]->bufferlength(), actualHash);
-
-            // //存储hash结果
-
-            // actualHashArray[searchCount] = actualHash;
-            // searchCount++;
-
-
-
-
-            //LOG(LIB_INFO) << "actualHash: ";
-            //  for(int j = 0; j < 32; j++) {
-            //      //printf("%x", REV(actualHash[j]));
-            //      printf("%02X", actualHash[j]);
-            //     }
-            //     printf("\n");           
-
-           
-
-            //LOG(LIB_INFO) << hex << actualHash;
-            
-            // LOG(LIB_INFO) << "actualHash: ";
-
-            // for(int j = 0; j < 32; j++) {
-            //     LOG(LIB_INFO) << hex << actualHash[j];
-            //     }
         }
         visitedlistpool->releaseVisitedList(vl);
         LOG(LIB_INFO) << "nodeCount: " << nodeCount;
 	    nodeCount = 0;
+
+        // set<int>::iterator it;
+        // for (it = tum_set.begin(); it != tum_set.end(); it++) //遍历set中的元素。
+        // LOG(LIB_INFO) << "Iterator Set:         " << *it;
+        LOG(LIB_INFO) << "tum_set.size():         " << tum_set.size();
+        
+        //cout << *it << endl;
+
         // wtm.split();
         // const double SearchTime  = double(wtm.elapsed())/1e6;
         // LOG(LIB_INFO) << ">>>> Search time:         " << SearchTime;   
         //时间相关的计时代码。      
-
-
-
-
-        // LOG(LIB_INFO) << "actualHashArray: ";
-
-        // for(int j = 0; j < searchCount; j++) {
-        //     LOG(LIB_INFO) << "actualHash: ";
-        //      for(int k = 0; k < 32; k++) {
-        //          printf("%02X", actualHashArray[j][k]);
-        //         }
-        //         printf("\n"); 
-        //         }
-        // LOG(LIB_INFO) << "searchCount: " << searchCount;        
-
-
-  
 
 
     }
