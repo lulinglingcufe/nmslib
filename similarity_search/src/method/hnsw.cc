@@ -468,27 +468,49 @@ namespace similarity {
         LOG(LIB_INFO) << "Finished making optimized index";
         LOG(LIB_INFO) << "Maximum level = " << enterpoint_->level;
         LOG(LIB_INFO) << "Total memory allocated for optimized index+data: " << (total_memory_allocated >> 20) << " Mb";
-        LOG(LIB_INFO) << "ElList_.size() = " << ElList_.size();
+   
+        //构建hash数组
+        int totalElementsStored_ = ElList_.size();
 
-        // for (int i = 0; i < ElList_.size(); i++) {
-        //     LOG(LIB_INFO) << "ElList_[i]->allFriends_->size() = " << ElList_[i]->allFriends_[0].size();
-        //     LOG(LIB_INFO) << "1  = " << ElList_[i]->allFriends_[1].size();
-        //     LOG(LIB_INFO) << "2  = " << ElList_[i]->allFriends_[2].size();
-        //     LOG(LIB_INFO) << "3  = " << ElList_[i]->allFriends_[3].size();
-        // }
-
+        std::uint8_t * actualHashArray[totalElementsStored_];
         std::uint8_t actualHash[Keccak256::HASH_LEN];
-        Keccak256::getHash(  (uint8_t *)ElList_[100]->getData()->buffer(), ElList_[100]->getData()->bufferlength(), actualHash);
+        int iLength = 0;
+    
+        for(int i = 0; i < totalElementsStored_; i++){
+        char buffer_test_and_buffer[200+530];
+        char buffer_test[200]; //朋友的数据
+        const HnswNode& node = *ElList_[i];
+        unsigned currlevel = node.level;
+        CHECK(currlevel + 1 == node.allFriends_.size());
+        iLength += std::sprintf(&buffer_test[iLength],"%d",currlevel);
 
-
-       LOG(LIB_INFO) << "actualHash  :  ";
-                 for(int j = 0; j < 32; j++) {
-                 printf("%02X", actualHash[j]);
+            for (unsigned level = 0; level <= currlevel; ++level) {
+                const auto& friends = node.allFriends_[level];
+                unsigned friendQty = friends.size();
+                //这个好像是一层里面朋友的数量？
+                iLength += std::sprintf(&buffer_test[iLength],"%d",friendQty);
+                for (unsigned k = 0; k < friendQty; ++k) {
+                    IdType friendId = friends[k]->id_;  //朋友的id。
+                    iLength += std::sprintf(&buffer_test[iLength],"%d",friendId);
                 }
-                printf("\n");  
+            }
+        iLength = 0;
+        std::sprintf(buffer_test_and_buffer,"%s%s",ElList_[i]->getData()->buffer(),buffer_test);
+        Keccak256::getHash(  (uint8_t *)buffer_test_and_buffer, 200+530, actualHash);
+        // LOG(LIB_INFO) << "actualHash  :  ";
+        //          for(int j = 0; j < 32; j++) {
+        //          printf("%02X", actualHash[j]);
+        //         }
+        //         printf("\n");      
+        actualHashArray[i] = actualHash;  
+        } //完成hash数组的构建
 
-        // for (int i = 0; i < ElList_.size(); i++) {
-        //     printf("value of a_static: %s\n", ElList_[i]->getData()->buffer());
+        // for(int i = 0; i < totalElementsStored_; i++){
+        // LOG(LIB_INFO) << "actualHash  :  ";
+        //          for(int j = 0; j < 32; j++) {
+        //          printf("%02X", actualHashArray[i][j]);
+        //         }
+        //         printf("\n");   
         // }
 
 
@@ -866,11 +888,11 @@ namespace similarity {
                     "maxlevel_ (" + ConvertToString(maxlevel_) + ") < node.allFriends_.size() (" + ConvertToString(currlevel));
                     */
             writeBinaryPOD(output, currlevel);
-            char buffer_test[400];
+            char buffer_test[200];
             int iLength = 0;
             //iLength += std::sprintf(buffer_test,"%d",1);
             iLength += std::sprintf(&buffer_test[iLength],"%d",currlevel);//static_cast<char>(currlevel)
-            LOG(LIB_INFO) << "This is currlevel:  " << currlevel;
+            //LOG(LIB_INFO) << "This is currlevel:  " << currlevel;
             //std::printf("n_char: %s \n", buffer_test);
             
 
@@ -894,9 +916,7 @@ namespace similarity {
             //std::printf("n_char: %s \n", buffer_test);
         }
 
-         
-
-
+        
     }
 
 

@@ -50,8 +50,8 @@ using std::setw;
 namespace similarity {
 
     int nodeCount = 0;
-    std::uint8_t * actualHashArray[1000];
-    int searchCount = 0;
+    //std::uint8_t * actualHashArray[1000];
+    //int searchCount = 0;
 
     template <typename dist_t>
     void
@@ -184,7 +184,7 @@ namespace similarity {
 
         //hash
         //LOG(LIB_INFO) << "This is SearchV1Merge: ";
-        std::uint8_t actualHash[Keccak256::HASH_LEN];
+        //std::uint8_t actualHash[Keccak256::HASH_LEN];
 
 
         float *pVectq = (float *)((char *)query->QueryObject()->data());
@@ -318,13 +318,13 @@ namespace similarity {
             // query->CheckAndAddToResult(queueData[i].key, new Object(currObj));
             query->CheckAndAddToResult(queueData[i].key, data_rearranged_[tnum]);
 
-            //打印hash结果
-		    Keccak256::getHash(  (uint8_t *)data_rearranged_[tnum]->buffer(), data_rearranged_[tnum]->bufferlength(), actualHash);
+            // //打印hash结果
+		    // Keccak256::getHash(  (uint8_t *)data_rearranged_[tnum]->buffer(), data_rearranged_[tnum]->bufferlength(), actualHash);
 
-            //存储hash结果
+            // //存储hash结果
 
-            actualHashArray[searchCount] = actualHash;
-            searchCount++;
+            // actualHashArray[searchCount] = actualHash;
+            // searchCount++;
 
 
 
