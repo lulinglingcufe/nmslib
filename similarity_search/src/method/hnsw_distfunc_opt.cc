@@ -343,9 +343,15 @@ namespace similarity {
         LOG(LIB_INFO) << "nodeCount: " << nodeCount;
 	    nodeCount = 0;
 
-        // set<int>::iterator it;
-        // for (it = tum_set.begin(); it != tum_set.end(); it++) //遍历set中的元素。
-        // LOG(LIB_INFO) << "Iterator Set:         " << *it;
+        printf("[");
+        set<int>::iterator it;
+        for (it = tum_set.begin(); it != tum_set.end(); it++){
+            printf("%d",*it);
+            printf(",");
+        }
+        printf("]"); //遍历set中的元素。
+        //LOG(LIB_INFO) << "Iterator Set:         " << *it;
+        
         LOG(LIB_INFO) << "tum_set.size():         " << tum_set.size();
         
         //cout << *it << endl;
