@@ -62,7 +62,7 @@ int query_times = 0;
 //这4个变量不要紧，都是用过一次就完了，不涉及到遍历。
 char node_hash_value_test[Keccak256::HASH_LEN];
 char actualHash_test[Keccak256::HASH_LEN];
-char dest[528];
+char dest[540];
 char float_array[12];
 //char buffer[3];
 //std::uint8_t  internal_node_hash_value_[(Keccak256::HASH_LEN)*3];
@@ -187,7 +187,7 @@ void VPTree<dist_t, SearchOracle>::Search(KNNQuery<dist_t>* query, IdType) const
   // //把VO数据结构存下来
    SaveIndexVO();
 
-   root_->RecursiveToSet_if_set_node_hash(); //把节点的if_set_node_hash全部重新置为fasle
+   //root_->RecursiveToSet_if_set_node_hash(); //把节点的if_set_node_hash全部重新置为fasle
 
   // LOG(LIB_INFO) << "Load index ";
   // //把VO数据结构读取出来
@@ -211,12 +211,11 @@ void VPTree<dist_t, SearchOracle>::Search(KNNQuery<dist_t>* query, IdType) const
 
 
 
-
-
 template <typename dist_t, typename SearchOracle>
 void VPTree<dist_t, SearchOracle>::SaveIndexVO() const{
 
-  std::string location = "/home/ubuntu/lulingling/nmslib/similarity_search/vptreevo/vptree_test_vo"+std::to_string(query_times);
+  //std::string location = "/home/ubuntu/lulingling/nmslib/similarity_search/vptreevo/vptree_test_vo"+std::to_string(query_times);
+  std::string location = "/home/ubuntu/lulingling/nmslib/similarity_search/vptreevo/vptree_test_vo1";
 
   std::ofstream output(location, std::ios::binary);
   CHECK_MSG(output, "Cannot open file '" + location + "' for writing");
@@ -792,18 +791,30 @@ VPTree<dist_t, SearchOracle>::VPNode::VPNode(
      * it is more efficient to put everything into a single bucket.
      */
     size_t LeastSize = dp.size() / BalanceConst;
-    //LOG(LIB_INFO) << "Construct actualHash "<< this;
-  //在这里构建merkle的输入：制高点、中间值。
-	//char float_array[12];
 
-  //LOG(LIB_INFO) << " Begin actualHash construction.  "<< mediandist_;
 	sprintf(float_array, "%f", mediandist_);
-  //char dest_test[528];
-  strcpy(dest, pivot_->buffer());
-  memcpy(dest+516, float_array, 12);
-  //打印hash结果
-  Keccak256::getHash(  (uint8_t *)dest, 528, actualHash);
+  //char dest[540];
+  memcpy(dest, pivot_->buffer(), 528);
+      // LOG(LIB_INFO) << "pivot_->buffer(): ";
+      //        for(int j = 0; j < 528; j++) {
+      //            printf("%02X", pivot_->buffer()[j]);
+      //           }
+      //           printf("\n"); 
+      // LOG(LIB_INFO) << "dest after memcpy pivot: ";
+      //        for(int j = 0; j < 540; j++) {
+      //            printf("%02X", dest[j]);
+      //           }
+      //           printf("\n");   
+  memcpy(dest+528, float_array, 12);
 
+
+
+
+
+
+
+  //打印hash结果
+  Keccak256::getHash(  (uint8_t *)dest, 540, actualHash);
   //LOG(LIB_INFO) << "pivot_->bufferlength()         = " << pivot_->bufferlength();//都是528  
 
     if (left.size() < LeastSize || right.size() < LeastSize) {
@@ -967,8 +978,6 @@ std::uint8_t * VPTree<dist_t, SearchOracle>::VPNode::GetHashValueForVOTest() {
 
   if (left_child_ != NULL  && right_child_ != NULL &&  if_set_node_hash == true){
     //如果是非叶子节点：node_hash_value_= 左孩子+右孩子+自身hash（至高点+中间值）
-
-    //LOG(LIB_INFO) << "left_child_->VOTes-> " << this <<"  :";
     std::uint8_t  internal_node_hash_value_[(Keccak256::HASH_LEN)*3];
 
     memcpy(internal_node_hash_value_, left_child_->GetHashValueForVOTest(), Keccak256::HASH_LEN);
@@ -978,18 +987,13 @@ std::uint8_t * VPTree<dist_t, SearchOracle>::VPNode::GetHashValueForVOTest() {
     //LOG(LIB_INFO) << "actualHash: "<< this <<"  :";
     memcpy(internal_node_hash_value_+ Keccak256::HASH_LEN + Keccak256::HASH_LEN, actualHash, Keccak256::HASH_LEN);
 
-            //  for(int j = 0; j < 32; j++) {
-            //      printf("%02X", actualHash[j]);
-            //     }
-            //     printf("\n"); 
-
-    std::uint8_t  actualHash_test_[Keccak256::HASH_LEN];
+    std::uint8_t  actualHash_test_[Keccak256::HASH_LEN];    
 
 	  sprintf(float_array, "%f", mediandist_);
-    //char dest_test[528];
-    strcpy(dest, pivot_->buffer());
-    memcpy(dest+516, float_array, 12);
-    Keccak256::getHash(  (uint8_t *)dest, 528, actualHash_test_);
+    //char dest_test[540];
+    memcpy(dest, pivot_->buffer(), 528);
+    memcpy(dest+528, float_array, 12);
+    Keccak256::getHash(  (uint8_t *)dest, 540, actualHash_test_);
  
     
     bool if_error = false;
@@ -1002,37 +1006,23 @@ std::uint8_t * VPTree<dist_t, SearchOracle>::VPNode::GetHashValueForVOTest() {
     if(if_error){
       if_error = false;
       printf("actualHash error!!!!! \n"); 
-      LOG(LIB_INFO) << "mediandist_:  "<< mediandist_;
-      printf("%x \n",pivot_->buffer()); 
+
       LOG(LIB_INFO) << "actualHash from store: ";
                  for(int j = 0; j < 32; j++) {
                  printf("%02X", actualHash[j]);
                 }
                 printf("\n"); 
+
+      LOG(LIB_INFO) << "mediandist_ from store:  "<< mediandist_;
+      LOG(LIB_INFO) << "pivot_->buffer() from store: ";
+                 for(int j = 0; j < 528; j++) {
+                 printf("%02X", pivot_->buffer()[j]);
+                }
+                printf("\n"); 
+                
     }
-
-    
-    //LOG(LIB_INFO) << "pivot_->bufferlength()         = " << pivot_->bufferlength();//都是528  
-
-    //打印 actualHash_test_ hash结果
-    // LOG(LIB_INFO) << "actualHash from mediandist_: "<< this <<"  :";
-    //              for(int j = 0; j < 32; j++) {
-    //              printf("%02X", actualHash_test_[j]);
-    //             }
-    //             printf("\n"); 
-
-    //memcpy(internal_node_hash_value_+ Keccak256::HASH_LEN + Keccak256::HASH_LEN, actualHash, Keccak256::HASH_LEN);
-
-
-    
-
     Keccak256::getHash(internal_node_hash_value_, (Keccak256::HASH_LEN)*3, node_hash_value_);
 
-    // LOG(LIB_INFO) << "Necessary Internal Node: " << this <<"  :";
-    //          for(int j = 0; j < 32; j++) {
-    //              printf("%02X", node_hash_value_[j]);
-    //             }
-    //             printf("\n"); 
 
   }
 
@@ -1138,7 +1128,13 @@ if(if_set_node_hash != false){
                 }
                 printf("\n");  
       LOG(LIB_INFO) << "This is Recursive mediandist_ :  "<< mediandist_;          
-      printf("%x \n",pivot_->buffer());
+      LOG(LIB_INFO) << "pivot_->buffer() from store: ";
+                 for(int j = 0; j < 32; j++) {
+                 printf("%02X", pivot_->buffer()[j]);
+                }
+                printf("\n");  
+
+
     left_child_->RecursiveToSet_if_set_node_hash();
     right_child_->RecursiveToSet_if_set_node_hash();
   }
