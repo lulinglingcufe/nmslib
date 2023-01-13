@@ -180,14 +180,14 @@ void VPTree<dist_t, SearchOracle>::Search(KNNQuery<dist_t>* query, IdType) const
   VPtreeVisitTimes_leaf = 0;
   query_times++;
 
-  root_->RecursiveToConstructHash();//构建完整的验证merkle tree(把凑数的node找出来)
+  //root_->RecursiveToConstructHash();//构建完整的验证merkle tree(把凑数的node找出来)
 
 
    LOG(LIB_INFO) << "Save index ";
   // //把VO数据结构存下来
    SaveIndexVO();
 
-   //root_->RecursiveToSet_if_set_node_hash(); //把节点的if_set_node_hash全部重新置为fasle
+   root_->RecursiveToSet_if_set_node_hash(); //把节点的if_set_node_hash全部重新置为fasle
 
    LOG(LIB_INFO) << "Load index ";
   // //把VO数据结构读取出来
@@ -214,8 +214,8 @@ void VPTree<dist_t, SearchOracle>::Search(KNNQuery<dist_t>* query, IdType) const
 template <typename dist_t, typename SearchOracle>
 void VPTree<dist_t, SearchOracle>::SaveIndexVO() const{
 
-  //std::string location = "/home/ubuntu/lulingling/nmslib/similarity_search/vptreevo/vptree_test_vo"+std::to_string(query_times);
-  std::string location = "/home/ubuntu/lulingling/nmslib/similarity_search/vptreevo/vptree_test_vo1";
+  std::string location = "/home/ubuntu/lulingling/nmslib/similarity_search/vptreevo/vptree_test_vo"+std::to_string(query_times);
+  //std::string location = "/home/ubuntu/lulingling/nmslib/similarity_search/vptreevo/vptree_test_vo1";
 
   std::ofstream output(location, std::ios::binary);
   CHECK_MSG(output, "Cannot open file '" + location + "' for writing");
@@ -321,8 +321,12 @@ void VPTree<dist_t, SearchOracle>::LoadIndex(const std::string& location) {
 
 template <typename dist_t, typename SearchOracle>
 void VPTree<dist_t, SearchOracle>::LoadIndexVO() const{
+  std::string location = "/home/ubuntu/lulingling/nmslib/similarity_search/vptreevo/vptree_test_vo"+std::to_string(query_times);
 
-  std::ifstream input("/home/ubuntu/lulingling/nmslib/similarity_search/vptreevo/vptree_test_vo1", std::ios::binary);
+  //std::ifstream input("/home/ubuntu/lulingling/nmslib/similarity_search/vptreevo/vptree_test_vo1", std::ios::binary);
+  std::ifstream input(location, std::ios::binary);
+
+
   //CHECK_MSG(input, "Cannot open file '" + "'/home/ubuntu/lulingling/nmslib/similarity_search/vptree_test_vo'" + "' for reading");
   CHECK_MSG(input, "Cannot open file for reading");
 
@@ -483,8 +487,8 @@ if(node->left_child_ != NULL){ //对于非叶子节点，需要存actualHash
       writeBinaryPOD(output, element->id());
     }
   } 
-  memcpy(node_hash_value_test, node->node_hash_value_, Keccak256::HASH_LEN);
-  writeBinaryPOD(output, node_hash_value_test); 
+  //memcpy(node_hash_value_test, node->node_hash_value_, Keccak256::HASH_LEN);
+  //writeBinaryPOD(output, node_hash_value_test); 
 }
 
   if(node->left_child_ != NULL && node->if_set_node_hash == true){ 
@@ -580,8 +584,8 @@ VPTree<dist_t, SearchOracle>::LoadVONodeDataTest(std::ifstream& input, bool Chun
 
   } else {
     //对叶子节点，读取node_hash_value_
-  readBinaryPOD(input, node_hash_value_test);
-  memcpy(node->node_hash_value_, node_hash_value_test, Keccak256::HASH_LEN);
+  //readBinaryPOD(input, node_hash_value_test);
+  //memcpy(node->node_hash_value_, node_hash_value_test, Keccak256::HASH_LEN);
   }
 
 
@@ -976,27 +980,27 @@ std::uint8_t * VPTree<dist_t, SearchOracle>::VPNode::GetHashValueForVOTest() {
   if (left_child_ == NULL  && right_child_ == NULL &&  if_set_node_hash == true){
     //比较一下是否一致
     //LOG(LIB_INFO) << "Leaf Node : ";
-    std::uint8_t  node_hash_value_test_[Keccak256::HASH_LEN];  
-    Keccak256::getHash(  (uint8_t *)CacheOptimizedBucket_, TotalSpaceUsed(*bucket_), node_hash_value_test_);
-    for(int i=0;i<Keccak256::HASH_LEN;i++){
-      if(node_hash_value_test_[i] != node_hash_value_[i]){
-        if_error = true; 
-      }
-    }
+    //std::uint8_t  node_hash_value_test_[Keccak256::HASH_LEN];  
+    Keccak256::getHash(  (uint8_t *)CacheOptimizedBucket_, TotalSpaceUsed(*bucket_), node_hash_value_);
+    // for(int i=0;i<Keccak256::HASH_LEN;i++){
+    //   if(node_hash_value_test_[i] != node_hash_value_[i]){
+    //     if_error = true; 
+    //   }
+    // }
 
-    if(if_error){
-      if_error = false;
-      printf("node_hash_value_ error!!!!! \n"); 
+    // if(if_error){
+    //   if_error = false;
+    //   printf("node_hash_value_ error!!!!! \n"); 
 
-      LOG(LIB_INFO) << "node_hash_value_ from store: ";
-                 for(int j = 0; j < 32; j++) {
-                 printf("%02X", node_hash_value_[j]);
-                }
-                printf("\n"); 
+    //   LOG(LIB_INFO) << "node_hash_value_ from store: ";
+    //              for(int j = 0; j < 32; j++) {
+    //              printf("%02X", node_hash_value_[j]);
+    //             }
+    //             printf("\n"); 
                 
-    }
+    // }
 
-    //memcpy(node_hash_value_,node_hash_value_test_,Keccak256::HASH_LEN);
+     //memcpy(node_hash_value_,node_hash_value_test_,Keccak256::HASH_LEN);
     //LOG(LIB_INFO) << "Finish Hash : ";
     //return node_hash_value_test_;
 
@@ -1146,17 +1150,17 @@ if(if_set_node_hash != false){
  //继续遍历过程。
  if(left_child_ != NULL  && right_child_ != NULL){
       //如果是中间节点
-      LOG(LIB_INFO) << "actualHash from store: ";
-                 for(int j = 0; j < 32; j++) {
-                 printf("%02X", actualHash[j]);
-                }
-                printf("\n");  
-      LOG(LIB_INFO) << "This is Recursive mediandist_ :  "<< mediandist_;          
-      LOG(LIB_INFO) << "pivot_->buffer() from store: ";
-                 for(int j = 0; j < 32; j++) {
-                 printf("%02X", pivot_->buffer()[j]);
-                }
-                printf("\n");  
+      //LOG(LIB_INFO) << "actualHash from store: ";
+      //            for(int j = 0; j < 32; j++) {
+      //            printf("%02X", actualHash[j]);
+      //           }
+      //           printf("\n");  
+      // LOG(LIB_INFO) << "This is Recursive mediandist_ :  "<< mediandist_;          
+      // LOG(LIB_INFO) << "pivot_->buffer() from store: ";
+      //            for(int j = 0; j < 32; j++) {
+      //            printf("%02X", pivot_->buffer()[j]);
+      //           }
+      //           printf("\n");  
 
 
     left_child_->RecursiveToSet_if_set_node_hash();
