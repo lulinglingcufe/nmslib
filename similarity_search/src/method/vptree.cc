@@ -183,13 +183,13 @@ void VPTree<dist_t, SearchOracle>::Search(KNNQuery<dist_t>* query, IdType) const
   root_->RecursiveToConstructHash();//构建完整的验证merkle tree(把凑数的node找出来)
 
 
-  // LOG(LIB_INFO) << "Save index ";
+   LOG(LIB_INFO) << "Save index ";
   // //把VO数据结构存下来
    SaveIndexVO();
 
    //root_->RecursiveToSet_if_set_node_hash(); //把节点的if_set_node_hash全部重新置为fasle
 
-  // LOG(LIB_INFO) << "Load index ";
+   LOG(LIB_INFO) << "Load index ";
   // //把VO数据结构读取出来
    LoadIndexVO();
 
@@ -553,7 +553,7 @@ VPTree<dist_t, SearchOracle>::LoadVONodeDataTest(std::ifstream& input, bool Chun
   readBinaryPOD(input, bucketsize); 
   if (bucketsize) {
     // read bucket content
-    ObjectVector bucket(bucketsize);
+    ObjectVector bucket(bucketsize); //创建了bucket
     IdType dataId = 0;
     for (size_t i = 0; i < bucketsize; i++) {
       readBinaryPOD(input, dataId);
@@ -563,7 +563,7 @@ VPTree<dist_t, SearchOracle>::LoadVONodeDataTest(std::ifstream& input, bool Chun
       CHECK_MSG(dataId < this->data_.size(), "Incorrect element ID: " + ConvertToString(dataId));
       bucket[i] = this->data_[dataId];
     }
-    node->CreateBucket(ChunkBucket, bucket, nullptr); //数据的指针需要再创建;ChunkBucket是bool
+    node->CreateBucket(ChunkBucket, bucket, nullptr); //数据的指针需要再创建;ChunkBucket是bool。这里已经把数据创建好了。后面直接就可以进行hash了。
   }
 
 
@@ -971,10 +971,42 @@ std::uint8_t * VPTree<dist_t, SearchOracle>::VPNode::GetHashValueTest() {
 template <typename dist_t, typename SearchOracle>
 //用递归的方法，从下往上构建merkle root。逻辑上参考GetHashValue()
 std::uint8_t * VPTree<dist_t, SearchOracle>::VPNode::GetHashValueForVOTest() {
+  bool if_error = false;
+  //如果节点是叶子节点。简化版，我们是直接存储了node_hash_value_（测试版首先比较一下是否一致）。我们直接通过节点构建hash。
+  if (left_child_ == NULL  && right_child_ == NULL &&  if_set_node_hash == true){
+    //比较一下是否一致
+    //LOG(LIB_INFO) << "Leaf Node : ";
+    std::uint8_t  node_hash_value_test_[Keccak256::HASH_LEN];  
+    Keccak256::getHash(  (uint8_t *)CacheOptimizedBucket_, TotalSpaceUsed(*bucket_), node_hash_value_test_);
+    for(int i=0;i<Keccak256::HASH_LEN;i++){
+      if(node_hash_value_test_[i] != node_hash_value_[i]){
+        if_error = true; 
+      }
+    }
+
+    if(if_error){
+      if_error = false;
+      printf("node_hash_value_ error!!!!! \n"); 
+
+      LOG(LIB_INFO) << "node_hash_value_ from store: ";
+                 for(int j = 0; j < 32; j++) {
+                 printf("%02X", node_hash_value_[j]);
+                }
+                printf("\n"); 
+                
+    }
+
+    //memcpy(node_hash_value_,node_hash_value_test_,Keccak256::HASH_LEN);
+    //LOG(LIB_INFO) << "Finish Hash : ";
+    //return node_hash_value_test_;
+
+  }
 
 
-  //如果节点是叶子节点。简化版，我们是直接存储了node_hash_value_。
-  //或者如果是凑数节点 
+
+  //或者如果是凑数节点 直接存储了node_hash_value_。
+
+
 
   if (left_child_ != NULL  && right_child_ != NULL &&  if_set_node_hash == true){
     //如果是非叶子节点：node_hash_value_= 左孩子+右孩子+自身hash（至高点+中间值）
@@ -995,8 +1027,8 @@ std::uint8_t * VPTree<dist_t, SearchOracle>::VPNode::GetHashValueForVOTest() {
     memcpy(dest+528, float_array, 12);
     Keccak256::getHash(  (uint8_t *)dest, 540, actualHash_test_);
  
+    //首先比较一下中间节点的actualHash_test_是否一致。
     
-    bool if_error = false;
     for(int i=0;i<Keccak256::HASH_LEN;i++){
       if(actualHash[i] != actualHash_test_[i]){
         if_error = true; 
@@ -1012,18 +1044,10 @@ std::uint8_t * VPTree<dist_t, SearchOracle>::VPNode::GetHashValueForVOTest() {
                  printf("%02X", actualHash[j]);
                 }
                 printf("\n"); 
-
-      LOG(LIB_INFO) << "mediandist_ from store:  "<< mediandist_;
-      LOG(LIB_INFO) << "pivot_->buffer() from store: ";
-                 for(int j = 0; j < 528; j++) {
-                 printf("%02X", pivot_->buffer()[j]);
-                }
-                printf("\n"); 
                 
     }
+    //构建中间节点的node_hash_value_
     Keccak256::getHash(internal_node_hash_value_, (Keccak256::HASH_LEN)*3, node_hash_value_);
-
-
   }
 
 
