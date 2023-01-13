@@ -175,12 +175,12 @@ void VPTree<dist_t, SearchOracle>::Search(KNNQuery<dist_t>* query, IdType) const
   //LOG(LIB_INFO) << "KNNQuery leaf_node_number          = " << leaf_node_number;
   root_->GenericSearch(query, mx);
   //LOG(LIB_INFO) << "KNNQuery VPtreeVisitTimes_test          = " << VPtreeVisitTimes_test;
-  //LOG(LIB_INFO) << "KNNQuery VPtreeVisitTimes_leaf          = " << VPtreeVisitTimes_leaf;
+  LOG(LIB_INFO) << "KNNQuery VPtreeVisitTimes_leaf record          = " << VPtreeVisitTimes_leaf;
   VPtreeVisitTimes_test = 0;  
   VPtreeVisitTimes_leaf = 0;
   query_times++;
 
-  //root_->RecursiveToConstructHash();//构建完整的验证merkle tree(把凑数的node找出来)
+  root_->RecursiveToConstructHash();//构建完整的验证merkle tree(把凑数的node找出来)
 
 
    LOG(LIB_INFO) << "Save index ";
@@ -234,10 +234,13 @@ void VPTree<dist_t, SearchOracle>::SaveIndexVO() const{
   writeBinaryPOD(output, ChunkBucket_);
   writeBinaryPOD(output, use_random_center_);
 
+  LOG(LIB_INFO) << "We writeBinaryPOD  use_random_center_ :  ";
+
   // Save node data
   if (root_) {
     //SaveVONodeData(output, root_.get());
     SaveVONodeDataTest(output, root_.get());
+    LOG(LIB_INFO) << "We SaveVONodeDataTest";
 
   }
   output.close();
@@ -322,7 +325,6 @@ void VPTree<dist_t, SearchOracle>::LoadIndex(const std::string& location) {
 template <typename dist_t, typename SearchOracle>
 void VPTree<dist_t, SearchOracle>::LoadIndexVO() const{
   std::string location = "/home/ubuntu/lulingling/nmslib/similarity_search/vptreevo/vptree_test_vo"+std::to_string(query_times);
-
   //std::ifstream input("/home/ubuntu/lulingling/nmslib/similarity_search/vptreevo/vptree_test_vo1", std::ios::binary);
   std::ifstream input(location, std::ios::binary);
 
@@ -357,7 +359,10 @@ void VPTree<dist_t, SearchOracle>::LoadIndexVO() const{
 
   CreateObjIdToPosMapper(this->data_, IdMapper);
 
+  //LOG(LIB_INFO) << "CreateObjIdToPosMapper  : ";
+
   unique_ptr<VPNode>  test_root_  = std::unique_ptr<VPNode>(LoadVONodeDataTest(input, ChunkBucket_, IdMapper));
+
    //unique_ptr<VPNode>  test_root_  = std::unique_ptr<VPNode>(LoadVONodeData(input, ChunkBucket_, IdMapper));
   std::uint8_t * test_sum_value = test_root_->GetHashValueForVOTest();
   
@@ -548,11 +553,9 @@ VPTree<dist_t, SearchOracle>::LoadVONodeDataTest(std::ifstream& input, bool Chun
   int if_set_node_hash;
   readBinaryPOD(input, if_set_node_hash);
   node->if_set_node_hash = if_set_node_hash;
-  //LOG(LIB_INFO) << "We readBinaryPOD  if_set_node_hash :  "<< if_set_node_hash;
   
 
   size_t bucketsize;
-  //LOG(LIB_INFO) << "We readBinaryPOD  bucketsize :  "<< bucketsize;
 
   readBinaryPOD(input, bucketsize); 
   if (bucketsize) {
@@ -722,7 +725,7 @@ VPTree<dist_t, SearchOracle>::VPNode::VPNode(
     //如果是叶子节点
     CreateBucket(ChunkBucket, data, progress_bar);
     Keccak256::getHash(  (uint8_t *)CacheOptimizedBucket_, TotalSpaceUsed(data), node_hash_value_);
-    leaf_node_number++;
+    //leaf_node_number+=data.size();
     return;
   }
 
@@ -867,7 +870,7 @@ void VPTree<dist_t, SearchOracle>::VPNode::GenericSearch(QueryType* query,
   //LOG(LIB_INFO) << "GenericSearch VPtreeVisitTimes_test          = " << VPtreeVisitTimes_test;
   if_set_node_hash = true;
   if (bucket_) { //如果是叶子节点
-    VPtreeVisitTimes_leaf++;
+    //VPtreeVisitTimes_leaf++;
 
     --MaxLeavesToVisit;
 
@@ -879,6 +882,7 @@ void VPTree<dist_t, SearchOracle>::VPNode::GenericSearch(QueryType* query,
       const Object* Obj = (*bucket_)[i];
       dist_t distQC = query->DistanceObjLeft(Obj);
       query->CheckAndAddToResult(distQC, Obj);
+      VPtreeVisitTimes_leaf++;
     }
     return;
   }
@@ -979,7 +983,6 @@ std::uint8_t * VPTree<dist_t, SearchOracle>::VPNode::GetHashValueForVOTest() {
   //如果节点是叶子节点。简化版，我们是直接存储了node_hash_value_（测试版首先比较一下是否一致）。我们直接通过节点构建hash。
   if (left_child_ == NULL  && right_child_ == NULL &&  if_set_node_hash == true){
     //比较一下是否一致
-    //LOG(LIB_INFO) << "Leaf Node : ";
     //std::uint8_t  node_hash_value_test_[Keccak256::HASH_LEN];  
     Keccak256::getHash(  (uint8_t *)CacheOptimizedBucket_, TotalSpaceUsed(*bucket_), node_hash_value_);
     // for(int i=0;i<Keccak256::HASH_LEN;i++){
