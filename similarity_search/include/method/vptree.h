@@ -115,7 +115,7 @@ class VPTree : public Index<dist_t> {
     void RecursiveToConstructHash(); 
     int RecursivePrintHashTree(); 
     void RecursiveToSet_if_set_node_hash(); 
-
+    void RecursiveToGet_VPtreeVisitTimes_leaf(); 
 
    private:
     void CreateBucket(bool ChunkBucket, const ObjectVector& data, 

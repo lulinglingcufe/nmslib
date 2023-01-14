@@ -175,10 +175,25 @@ void VPTree<dist_t, SearchOracle>::Search(KNNQuery<dist_t>* query, IdType) const
   //LOG(LIB_INFO) << "KNNQuery leaf_node_number          = " << leaf_node_number;
   root_->GenericSearch(query, mx);
   //LOG(LIB_INFO) << "KNNQuery VPtreeVisitTimes_test          = " << VPtreeVisitTimes_test;
-  LOG(LIB_INFO) << "KNNQuery VPtreeVisitTimes_leaf record          = " << VPtreeVisitTimes_leaf;
-  VPtreeVisitTimes_test = 0;  
-  VPtreeVisitTimes_leaf = 0;
+  //VPtreeVisitTimes_test = 0;  
+  //VPtreeVisitTimes_leaf = 0;
   query_times++;
+  // root_->RecursiveToGet_VPtreeVisitTimes_leaf(); 
+  // root_->RecursiveToSet_if_set_node_hash();
+
+  // LOG(LIB_INFO) << "KNNQuery VPtreeVisitTimes_leaf record          = " << VPtreeVisitTimes_leaf/query_times;
+
+
+// if(query_times<=9){
+// root_->RecursiveToSet_if_set_node_hash(); //把节点的if_set_node_hash全部重新置为fasle
+// }
+
+  // if(query_times == 10){
+  //  root_->RecursiveToGet_VPtreeVisitTimes_leaf(); 
+  //  LOG(LIB_INFO) << "KNNQuery VPtreeVisitTimes_leaf record          = " << VPtreeVisitTimes_leaf;
+  // }
+
+
 
   root_->RecursiveToConstructHash();//构建完整的验证merkle tree(把凑数的node找出来)
 
@@ -189,9 +204,9 @@ void VPTree<dist_t, SearchOracle>::Search(KNNQuery<dist_t>* query, IdType) const
 
    root_->RecursiveToSet_if_set_node_hash(); //把节点的if_set_node_hash全部重新置为fasle
 
-   LOG(LIB_INFO) << "Load index ";
+   //LOG(LIB_INFO) << "Load index ";
   // //把VO数据结构读取出来
-   LoadIndexVO();
+   //LoadIndexVO();
 
 
 
@@ -234,14 +249,11 @@ void VPTree<dist_t, SearchOracle>::SaveIndexVO() const{
   writeBinaryPOD(output, ChunkBucket_);
   writeBinaryPOD(output, use_random_center_);
 
-  LOG(LIB_INFO) << "We writeBinaryPOD  use_random_center_ :  ";
 
   // Save node data
   if (root_) {
     //SaveVONodeData(output, root_.get());
     SaveVONodeDataTest(output, root_.get());
-    LOG(LIB_INFO) << "We SaveVONodeDataTest";
-
   }
   output.close();
 }
@@ -882,7 +894,7 @@ void VPTree<dist_t, SearchOracle>::VPNode::GenericSearch(QueryType* query,
       const Object* Obj = (*bucket_)[i];
       dist_t distQC = query->DistanceObjLeft(Obj);
       query->CheckAndAddToResult(distQC, Obj);
-      VPtreeVisitTimes_leaf++;
+      //VPtreeVisitTimes_leaf++;
     }
     return;
   }
@@ -1171,6 +1183,24 @@ if(if_set_node_hash != false){
   }
 }
 
+
+template <typename dist_t, typename SearchOracle>
+//template <typename QueryType>
+void VPTree<dist_t, SearchOracle>::VPNode::RecursiveToGet_VPtreeVisitTimes_leaf() {
+
+if(if_set_node_hash==true && left_child_ == NULL && right_child_== NULL){
+  //LOG(LIB_INFO) << "bucket_->size(): "<< bucket_->size();
+  VPtreeVisitTimes_leaf+= bucket_->size();
+}
+
+ //遍历过程。
+ if(left_child_ != NULL  && right_child_ != NULL){
+    left_child_->RecursiveToGet_VPtreeVisitTimes_leaf();
+    right_child_->RecursiveToGet_VPtreeVisitTimes_leaf();
+  }
+
+
+}
 
 
 
