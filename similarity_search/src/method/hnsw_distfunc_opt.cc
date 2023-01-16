@@ -186,12 +186,16 @@ namespace similarity {
         LOG(LIB_INFO) << "nodeCount: " << nodeCount;
     }
 
+int toal_query_number =0;
+int total_tum_set_size = 0;
+
     template <typename dist_t>
     void
     Hnsw<dist_t>::SearchV1Merge(KNNQuery<dist_t> *query, bool normalize)
     {
         // WallClockTimer wtm;
         // wtm.reset();
+        toal_query_number++;
         set<int> tum_set;
         int nodeCount = 0;
 
@@ -340,19 +344,27 @@ namespace similarity {
             query->CheckAndAddToResult(queueData[i].key, data_rearranged_[tnum]);
         }
         visitedlistpool->releaseVisitedList(vl);
-        LOG(LIB_INFO) << "nodeCount: " << nodeCount;
+        //LOG(LIB_INFO) << "nodeCount: " << nodeCount;
 	    nodeCount = 0;
 
-        printf("[");
-        set<int>::iterator it;
-        for (it = tum_set.begin(); it != tum_set.end(); it++){
-            printf("%d",*it);
-            printf(",");
-        }
-        printf("]"); //遍历set中的元素。
+        //遍历set中的元素。
+        // printf("[");
+        // set<int>::iterator it;
+        // for (it = tum_set.begin(); it != tum_set.end(); it++){
+        //     printf("%d",*it);
+        //     printf(",");
+        // }
+        // printf("]"); 
         //LOG(LIB_INFO) << "Iterator Set:         " << *it;
-        
+        total_tum_set_size+=tum_set.size();
         LOG(LIB_INFO) << "tum_set.size():         " << tum_set.size();
+        
+        if(toal_query_number ==100){
+         LOG(LIB_INFO) << "average total_tum_set_size:         " << total_tum_set_size/100.0;
+        }
+
+
+        
         
         //cout << *it << endl;
 

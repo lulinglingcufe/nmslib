@@ -472,12 +472,13 @@ namespace similarity {
         //构建hash数组
         int totalElementsStored_ = ElList_.size();
 
-        std::uint8_t * actualHashArray[totalElementsStored_];
-        std::uint8_t actualHash[Keccak256::HASH_LEN];
+        // std::uint8_t * actualHashArray[totalElementsStored_];
+        // std::uint8_t actualHash[Keccak256::HASH_LEN];
+        char * actualHashArray[totalElementsStored_];
         int iLength = 0;
     
         for(int i = 0; i < totalElementsStored_; i++){
-        char buffer_test_and_buffer[200+530];
+        char buffer_test_and_buffer[200+530]; //节点buffer的数据
         char buffer_test[200]; //朋友的数据
         const HnswNode& node = *ElList_[i];
         unsigned currlevel = node.level;
@@ -496,24 +497,22 @@ namespace similarity {
             }
         iLength = 0;
         std::sprintf(buffer_test_and_buffer,"%s%s",ElList_[i]->getData()->buffer(),buffer_test);
-        Keccak256::getHash(  (uint8_t *)buffer_test_and_buffer, 200+530, actualHash);
+        actualHashArray[i] = buffer_test_and_buffer;  //把字符数组指针放到一个数组里面。
+
+        //把这些信息全部都存到一个文件里面。
+
+
+
+        // Keccak256::getHash(  (uint8_t *)buffer_test_and_buffer, 200+530, actualHash);
+        // actualHashArray[i] = actualHash;  
+        } //完成hash数组的构建
+
+
         // LOG(LIB_INFO) << "actualHash  :  ";
         //          for(int j = 0; j < 32; j++) {
         //          printf("%02X", actualHash[j]);
         //         }
-        //         printf("\n");      
-        actualHashArray[i] = actualHash;  
-        } //完成hash数组的构建
-
-        // for(int i = 0; i < totalElementsStored_; i++){
-        // LOG(LIB_INFO) << "actualHash  :  ";
-        //          for(int j = 0; j < 32; j++) {
-        //          printf("%02X", actualHashArray[i][j]);
-        //         }
         //         printf("\n");   
-        // }
-
-
 
 
     }

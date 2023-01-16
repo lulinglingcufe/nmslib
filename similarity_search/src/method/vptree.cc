@@ -12,6 +12,7 @@
  * Apache License Version 2.0 http://www.apache.org/licenses/.
  *
  */
+#include "ztimer.h"
 #include <algorithm>
 #include <iomanip>
 #include <iostream>
@@ -57,6 +58,8 @@ int VPtreeVisitTimes_leaf = 0;
 int leaf_node_number = 0;
 unsigned MAX_LEVEL = 0;
 int query_times = 0;
+double totalSearchTime = 0;
+double totalSearchTime_load = 0;
 
 //std::uint8_t buffer_test[3];
 //这4个变量不要紧，都是用过一次就完了，不涉及到遍历。
@@ -172,7 +175,10 @@ void VPTree<dist_t, SearchOracle>::Search(RangeQuery<dist_t>* query, IdType) con
 template <typename dist_t, typename SearchOracle>
 void VPTree<dist_t, SearchOracle>::Search(KNNQuery<dist_t>* query, IdType) const {
   int mx = MaxLeavesToVisit_;
-  //LOG(LIB_INFO) << "KNNQuery leaf_node_number          = " << leaf_node_number;
+   
+  //计时器 
+        WallClockTimer wtm;
+        wtm.reset();
   root_->GenericSearch(query, mx);
   //LOG(LIB_INFO) << "KNNQuery VPtreeVisitTimes_test          = " << VPtreeVisitTimes_test;
   //VPtreeVisitTimes_test = 0;  
@@ -180,33 +186,52 @@ void VPTree<dist_t, SearchOracle>::Search(KNNQuery<dist_t>* query, IdType) const
   query_times++;
   // root_->RecursiveToGet_VPtreeVisitTimes_leaf(); 
   // root_->RecursiveToSet_if_set_node_hash();
-
   // LOG(LIB_INFO) << "KNNQuery VPtreeVisitTimes_leaf record          = " << VPtreeVisitTimes_leaf/query_times;
 
 
-// if(query_times<=9){
+ //SP构造VO的size实验代码
+// if(query_times<=99){
 // root_->RecursiveToSet_if_set_node_hash(); //把节点的if_set_node_hash全部重新置为fasle
 // }
 
-  // if(query_times == 10){
-  //  root_->RecursiveToGet_VPtreeVisitTimes_leaf(); 
-  //  LOG(LIB_INFO) << "KNNQuery VPtreeVisitTimes_leaf record          = " << VPtreeVisitTimes_leaf;
-  // }
+//   if(query_times == 100){
+//    root_->RecursiveToGet_VPtreeVisitTimes_leaf(); 
+//    LOG(LIB_INFO) << "KNNQuery VPtreeVisitTimes_leaf record          = " << VPtreeVisitTimes_leaf;
+//   }
 
 
-
-  root_->RecursiveToConstructHash();//构建完整的验证merkle tree(把凑数的node找出来)
-
-
-   LOG(LIB_INFO) << "Save index ";
-  // //把VO数据结构存下来
-   SaveIndexVO();
+   //SP构造VO的时间实验代码
+   root_->RecursiveToConstructHash();//构建完整的验证merkle tree(把凑数的node找出来)
+    LOG(LIB_INFO) << "Save index ";
+   // //把VO数据结构存下来
+    SaveIndexVO();
 
    root_->RecursiveToSet_if_set_node_hash(); //把节点的if_set_node_hash全部重新置为fasle
 
-   //LOG(LIB_INFO) << "Load index ";
-  // //把VO数据结构读取出来
-   //LoadIndexVO();
+        wtm.split();
+        const double SearchTime  = double(wtm.elapsed())/1e3;
+        totalSearchTime += SearchTime; 
+        LOG(LIB_INFO) << ">>>> Search time:         " << totalSearchTime/(query_times*1.0);
+
+ 
+  LOG(LIB_INFO) << "Load index ";
+  //把VO数据结构读取出来。client验证VO的时间实验代码
+  WallClockTimer wtmload;
+  wtmload.reset();
+  LoadIndexVO();
+  root_->GenericSearch(query, mx);
+        wtmload.split();
+        const double SearchTimeload  = double(wtmload.elapsed())/1e3;
+        totalSearchTime_load += SearchTimeload; 
+        LOG(LIB_INFO) << ">>>> Search totalSearchTime_load :         " << totalSearchTime_load/(query_times*1.0);
+  // //计时器 
+        // wtm.split();
+        // const double SearchTime  = double(wtm.elapsed())/1e3;
+        // totalSearchTime += SearchTime; 
+        // LOG(LIB_INFO) << ">>>> Search time:         " << totalSearchTime/(query_times*1.0);
+
+
+
 
 
 
