@@ -477,6 +477,12 @@ namespace similarity {
         char * actualHashArray[totalElementsStored_];
         int iLength = 0;
     
+        //把节点和朋友写入一个文件。
+        // std::ofstream output("/home/ubuntu/lulingling/nmslib/similarity_search/hnsw_node_and_friend",
+        //                      std::ios::binary /* text files can be opened in binary mode as well */);
+        // CHECK_MSG(output, "Cannot open file '" + location + "' for writing");
+        // output.exceptions(ios::badbit | ios::failbit);
+
         for(int i = 0; i < totalElementsStored_; i++){
         char buffer_test_and_buffer[200+530]; //节点buffer的数据
         char buffer_test[200]; //朋友的数据
@@ -501,6 +507,7 @@ namespace similarity {
 
         //把这些信息全部都存到一个文件里面。
 
+        //writeBinaryPOD(output, buffer_test_and_buffer);
 
 
         // Keccak256::getHash(  (uint8_t *)buffer_test_and_buffer, 200+530, actualHash);

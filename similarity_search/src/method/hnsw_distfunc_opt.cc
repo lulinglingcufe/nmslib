@@ -363,6 +363,8 @@ int total_tum_set_size = 0;
          LOG(LIB_INFO) << "average total_tum_set_size:         " << total_tum_set_size/100.0;
         }
 
+        //在这里加上存储朋友的代码？
+
 
         
         

@@ -501,6 +501,10 @@ namespace similarity {
         void LoadOptimizedIndex(std::istream& input);
 
         void SaveRegularIndexBin(std::ostream& output);
+
+        void SaveRegularFriendsBin();
+
+
         void LoadRegularIndexBin(std::istream& input);
         void SaveRegularIndexText(std::ostream& output);
         void LoadRegularIndexText(std::istream& input);
