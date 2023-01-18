@@ -14,13 +14,13 @@ ClassAccuracy:     0 -> [0 0]
 RelPosError:       1 -> [1 	1]
 NumCloser:         0 -> [0 	0]
 ------------------------------------
-QueryTime:         0.18 -> [0.11 	0.25]
-QueryPerSec:       5464.48 -> [5464.48 	5464.48]
+QueryTime:         0.78 -> [0.41 	1.16]
+QueryPerSec:       1271.46 -> [1271.46 	1271.46]
 DistComp:          0 -> [-0 	0]
 ------------------------------------
-ImprEfficiency:    2.65 -> [2.65 	2.65]
+ImprEfficiency:    0.62 -> [0.62 	0.62]
 ImprDistComp:      inf -> [inf 	inf]
 ------------------------------------
 Memory Usage:      17.63 MB
-Index Time:        0.69 sec
+Index Time:        0.71 sec
 ------------------------------------

@@ -372,6 +372,9 @@ namespace similarity {
         const Object *getData() const { return data_; }
         size_t getId() const { return id_; }
         const vector<HnswNode *> &getAllFriends(int level) const { return allFriends_[level]; }
+
+
+
         mutex accessGuard_;
 
         size_t id_;
@@ -502,7 +505,6 @@ namespace similarity {
 
         void SaveRegularIndexBin(std::ostream& output);
 
-        void SaveRegularFriendsBin();
 
 
         void LoadRegularIndexBin(std::istream& input);

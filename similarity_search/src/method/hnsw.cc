@@ -181,6 +181,18 @@ namespace similarity {
         return;
     }
 
+
+
+
+
+
+
+
+
+
+
+
+
     template <typename dist_t>
     void
     Hnsw<dist_t>::CreateIndex(const AnyParams &IndexParams)
@@ -924,6 +936,20 @@ namespace similarity {
 
         
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     template <typename dist_t>
