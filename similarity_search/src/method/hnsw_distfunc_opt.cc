@@ -354,20 +354,23 @@ int total_tum_set_size = 0;
         //LOG(LIB_INFO) << "nodeCount: " << nodeCount;
 	    nodeCount = 0;
 
-        LOG(LIB_INFO) << "toal_query_number:         " << toal_query_number;
-
-        //遍历set中的元素。打印出来，可以做proof的实验。
+        ////LOG(LIB_INFO) << "toal_query_number:         " << toal_query_number;
         total_tum_set_size+=tum_set.size();
+        ////遍历set中的元素。打印出来，可以做proof的实验。
+
         LOG(LIB_INFO) << "tum_set.size():         " << tum_set.size();
-        
-        printf("{");
-        set<int>::iterator it;
-        for (it = tum_set.begin(); it != tum_set.end(); it++){
-            printf("%d",*it);
-            printf(",");
-        }
-        printf("}"); 
-        //LOG(LIB_INFO) << "Iterator Set:         " << *it;
+        // printf("\n");
+
+        // printf("{");
+        // set<int>::iterator it;
+        // for (it = tum_set.begin(); it != tum_set.end(); it++){
+        //     printf("%d",*it);
+        //     printf(",");
+        // }
+        // printf("}\n"); 
+
+        ////遍历set中的元素。打印出来，可以做proof的实验。
+        ////LOG(LIB_INFO) << "Iterator Set:         " << *it;
 
         if(toal_query_number == 100){
          LOG(LIB_INFO) << "average total_tum_set_size:         " << total_tum_set_size/100.0;
@@ -378,9 +381,9 @@ int total_tum_set_size = 0;
         const double SearchTime  = double(wtm.elapsed())/1e3;
         totalSearchTime_hnsw += SearchTime; 
         if(toal_query_number == 100){
-            LOG(LIB_INFO) << ">>>> Search time:         " << totalSearchTime_hnsw/(toal_query_number*1.0);
+            LOG(LIB_INFO) << ">>>> average Search time:         " << totalSearchTime_hnsw/(toal_query_number*1.0);
         }
-        //-------------------在这里加上存储朋友的代码？
+        //-------------------在这里加上存储朋友的代码。
 //         WallClockTimer wtmsave;
 //         wtmsave.reset();
 
@@ -417,11 +420,9 @@ int total_tum_set_size = 0;
 //         const double SearchTime_save  = double(wtmsave.elapsed())/1e3;
 //         totalSearchTime_hnsw_save += SearchTime_save; 
 //         if(toal_query_number == 100){
-//             LOG(LIB_INFO) << ">>>> totalSearchTime_hnsw_save time:         " << totalSearchTime_hnsw_save/(toal_query_number*1.0);
+//             LOG(LIB_INFO) << ">>>> average totalSearchTime_hnsw_save time:         " << totalSearchTime_hnsw_save/(toal_query_number*1.0);
 //         }        
       //----------------存储朋友的逻辑结束。
-
-
 
 
        //----------------读取朋友的逻辑开始。
@@ -463,11 +464,8 @@ int total_tum_set_size = 0;
         // const double SearchTimeload  = double(wtmload.elapsed())/1e3;
         // totalSearchTime_hnsw_load += SearchTimeload; 
         // if(toal_query_number == 100){
-        // LOG(LIB_INFO) << ">>>> Search totalSearchTime_hnsw_load :         " << totalSearchTime_hnsw_load/(toal_query_number*1.0);
+        // LOG(LIB_INFO) << ">>>> average totalSearchTime_hnsw_load :         " << totalSearchTime_hnsw_load/(toal_query_number*1.0);
         // }
-
-
-    
        //----------------读取朋友的逻辑结束。 
 
 

@@ -481,13 +481,13 @@ namespace similarity {
         LOG(LIB_INFO) << "Maximum level = " << enterpoint_->level;
         LOG(LIB_INFO) << "Total memory allocated for optimized index+data: " << (total_memory_allocated >> 20) << " Mb";
    
-        //构建hash数组
+        //构建hash数组的 字符数组
         int totalElementsStored_ = ElList_.size();
 
         // std::uint8_t * actualHashArray[totalElementsStored_];
         // std::uint8_t actualHash[Keccak256::HASH_LEN];
         char * actualHashArray[totalElementsStored_];
-        int iLength = 0;
+         int iLength = 0;
     
         //把节点和朋友写入一个文件。
         // std::ofstream output("/home/ubuntu/lulingling/nmslib/similarity_search/hnsw_node_and_friend",
