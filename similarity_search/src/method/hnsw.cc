@@ -27,6 +27,7 @@
 #include <iostream>
 #include <memory>
 
+#include "ztimer.h"
 #include "Keccak256.h"
 #include "portable_prefetch.h"
 #include "portable_simd.h"
@@ -481,6 +482,9 @@ namespace similarity {
         LOG(LIB_INFO) << "Maximum level = " << enterpoint_->level;
         LOG(LIB_INFO) << "Total memory allocated for optimized index+data: " << (total_memory_allocated >> 20) << " Mb";
    
+        WallClockTimer wtmstore_friends;
+        wtmstore_friends.reset();
+
         //构建hash数组的 字符数组
         int totalElementsStored_ = ElList_.size();
 
@@ -516,16 +520,10 @@ namespace similarity {
         iLength = 0;
         std::sprintf(buffer_test_and_buffer,"%s%s",ElList_[i]->getData()->buffer(),buffer_test);
         actualHashArray[i] = buffer_test_and_buffer;  //把字符数组指针放到一个数组里面。
-
-        //把这些信息全部都存到一个文件里面。
-
-        //writeBinaryPOD(output, buffer_test_and_buffer);
-
-
-        // Keccak256::getHash(  (uint8_t *)buffer_test_and_buffer, 200+530, actualHash);
-        // actualHashArray[i] = actualHash;  
-        } //完成hash数组的构建
-
+        } //完成hash的字符串数组的构建
+        wtmstore_friends.split();
+        const double SearchTime_wtmstore_friends  = double(wtmstore_friends.elapsed())/1e3;
+        LOG(LIB_INFO) << ">>>> SearchTime_wtmstore_friends :         " << SearchTime_wtmstore_friends;
 
         // LOG(LIB_INFO) << "actualHash  :  ";
         //          for(int j = 0; j < 32; j++) {
