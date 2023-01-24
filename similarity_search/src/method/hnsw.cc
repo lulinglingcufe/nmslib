@@ -198,6 +198,10 @@ namespace similarity {
     void
     Hnsw<dist_t>::CreateIndex(const AnyParams &IndexParams)
     {
+        
+        WallClockTimer wtmCreateIndex;
+        wtmCreateIndex.reset();
+
         AnyParamManager pmgr(IndexParams);
 
         pmgr.GetParamOptional("M", M_, 16);
@@ -477,6 +481,11 @@ namespace similarity {
             linkLists_[i] = linkList;
             ElList_[i]->copyHigherLevelLinksToOptIndex(linkList, 0);
         };
+
+        wtmCreateIndex.split();
+        const double SearchTime_wtmCreateIndex  = double(wtmCreateIndex.elapsed())/1e3;
+        LOG(LIB_INFO) << ">>>> SearchTime_wtmCreateIndex :         " <<SearchTime_wtmCreateIndex;
+
 
         LOG(LIB_INFO) << "Finished making optimized index";
         LOG(LIB_INFO) << "Maximum level = " << enterpoint_->level;

@@ -60,6 +60,7 @@ unsigned MAX_LEVEL = 0;
 int query_times = 0;
 double totalSearchTime = 0;
 double totalSearchTime_load = 0;
+double total_vptree_merkle_node_time =0;
 
 //std::uint8_t buffer_test[3];
 //这4个变量不要紧，都是用过一次就完了，不涉及到遍历。
@@ -88,6 +89,11 @@ VPTree<dist_t, SearchOracle>::VPTree(
 
 template <typename dist_t, typename SearchOracle>
 void VPTree<dist_t, SearchOracle>::CreateIndex(const AnyParams& IndexParams) {
+
+        WallClockTimer wtmCreateIndex_vptree;
+        wtmCreateIndex_vptree.reset();
+
+
   AnyParamManager pmgr(IndexParams);
 
   pmgr.GetParamOptional("bucketSize", BucketSize_, 50);
@@ -122,6 +128,13 @@ void VPTree<dist_t, SearchOracle>::CreateIndex(const AnyParams& IndexParams) {
                      0,
                      use_random_center_ /* use random center */));
 
+
+        wtmCreateIndex_vptree.split();
+        const double wtmCreateIndex_vptree_time  = double(wtmCreateIndex_vptree.elapsed())/1e3;
+        LOG(LIB_INFO) << "wtmCreateIndex_vptree_time is          = " << wtmCreateIndex_vptree_time;
+        LOG(LIB_INFO) << "total_vptree_merkle_node_time is          = " << total_vptree_merkle_node_time;
+
+
   if (progress_bar) { // make it 100%
     (*progress_bar) += (progress_bar->expected_count() - progress_bar->count());
   }
@@ -129,6 +142,10 @@ void VPTree<dist_t, SearchOracle>::CreateIndex(const AnyParams& IndexParams) {
 
   //二、从下往上（通过递归的方法）构建整棵树的 merle hash：
   //LOG(LIB_INFO) << "Begin root Hash: ";
+
+        WallClockTimer wtm_get_merkle_root;
+        wtm_get_merkle_root.reset();
+
   std::uint8_t * sum_value = root_->GetHashValueTest();
 
             LOG(LIB_INFO) << "root Hash: ";
@@ -137,6 +154,9 @@ void VPTree<dist_t, SearchOracle>::CreateIndex(const AnyParams& IndexParams) {
                 }
                 printf("\n");   
 
+        wtm_get_merkle_root.split();
+        const double wtm_get_merkle_root_time  = double(wtm_get_merkle_root.elapsed())/1e3;
+        LOG(LIB_INFO) << "wtm_get_merkle_root_time is          = " << wtm_get_merkle_root_time;
 
   // for ( int i = 0; i < 2; i++ )
   //  {
@@ -760,8 +780,15 @@ VPTree<dist_t, SearchOracle>::VPNode::VPNode(
 
   if (!data.empty() && data.size() <= BucketSize) {
     //如果是叶子节点
+        WallClockTimer wtm_node_hash;
+        wtm_node_hash.reset();
+
     CreateBucket(ChunkBucket, data, progress_bar);
     Keccak256::getHash(  (uint8_t *)CacheOptimizedBucket_, TotalSpaceUsed(data), node_hash_value_);
+
+        wtm_node_hash.split();
+        const double SearchTime_node_hash  = double(wtm_node_hash.elapsed())/1e3;
+        total_vptree_merkle_node_time += SearchTime_node_hash; 
     //leaf_node_number+=data.size();
     return;
   }
@@ -836,6 +863,9 @@ VPTree<dist_t, SearchOracle>::VPNode::VPNode(
      */
     size_t LeastSize = dp.size() / BalanceConst;
 
+        WallClockTimer wtm_node_actualHash;
+        wtm_node_actualHash.reset();
+		
 	sprintf(float_array, "%f", mediandist_);
   //char dest[540];
   memcpy(dest, pivot_->buffer(), 528);
@@ -850,16 +880,16 @@ VPTree<dist_t, SearchOracle>::VPNode::VPNode(
       //           }
       //           printf("\n");   
   memcpy(dest+528, float_array, 12);
-
-
-
-
-
-
-
   //打印hash结果
   Keccak256::getHash(  (uint8_t *)dest, 540, actualHash);
   //LOG(LIB_INFO) << "pivot_->bufferlength()         = " << pivot_->bufferlength();//都是528  
+        wtm_node_actualHash.split();
+        const double SearchTime_wtm_node_actualHash  = double(wtm_node_actualHash.elapsed())/1e3;
+        total_vptree_merkle_node_time += SearchTime_wtm_node_actualHash; 
+
+
+
+
 
     if (left.size() < LeastSize || right.size() < LeastSize) {
         CreateBucket(ChunkBucket, data, progress_bar);
