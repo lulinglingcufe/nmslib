@@ -129,7 +129,7 @@ void VPTree<dist_t, SearchOracle>::CreateIndex(const AnyParams& IndexParams) {
                      use_random_center_ /* use random center */));
 
 
-        wtmCreateIndex_vptree.split();
+        wtmCreateIndex_vptree.split(); //构建vptree index耗费的时间。计时器。
         const double wtmCreateIndex_vptree_time  = double(wtmCreateIndex_vptree.elapsed())/1e3;
         LOG(LIB_INFO) << "wtmCreateIndex_vptree_time is          = " << wtmCreateIndex_vptree_time;
         LOG(LIB_INFO) << "total_vptree_merkle_node_time is          = " << total_vptree_merkle_node_time;
@@ -196,7 +196,7 @@ template <typename dist_t, typename SearchOracle>
 void VPTree<dist_t, SearchOracle>::Search(KNNQuery<dist_t>* query, IdType) const {
   int mx = MaxLeavesToVisit_;
    
-  //计时器 
+  //SP构造VO的计时器 
         WallClockTimer wtm;
         wtm.reset();
   root_->GenericSearch(query, mx);
@@ -228,10 +228,10 @@ void VPTree<dist_t, SearchOracle>::Search(KNNQuery<dist_t>* query, IdType) const
 
    root_->RecursiveToSet_if_set_node_hash(); //把节点的if_set_node_hash全部重新置为fasle
 
-        wtm.split();
-        const double SearchTime  = double(wtm.elapsed())/1e3;
+        wtm.split();//计时结束。
+        const double SearchTime  = double(wtm.elapsed())/1e3; //这样的结果好像已经是微秒了 ms
         totalSearchTime += SearchTime; 
-        LOG(LIB_INFO) << ">>>> Search time:         " << totalSearchTime/(query_times*1.0);
+        LOG(LIB_INFO) << ">>>> Search time:         " << totalSearchTime/(query_times*1.0);//SP构造VO结束。
 
  
   LOG(LIB_INFO) << "Load index ";
@@ -240,10 +240,12 @@ void VPTree<dist_t, SearchOracle>::Search(KNNQuery<dist_t>* query, IdType) const
   wtmload.reset();
   LoadIndexVO();
   root_->GenericSearch(query, mx);
-        wtmload.split();
+        wtmload.split();//计时结束。
         const double SearchTimeload  = double(wtmload.elapsed())/1e3;
-        totalSearchTime_load += SearchTimeload; 
+        totalSearchTime_load += SearchTimeload; //totalSearchTime_load是一个全局变量。
         LOG(LIB_INFO) << ">>>> Search totalSearchTime_load :         " << totalSearchTime_load/(query_times*1.0);
+  //用户验证VO结束。
+
   // //计时器 
         // wtm.split();
         // const double SearchTime  = double(wtm.elapsed())/1e3;
@@ -780,7 +782,7 @@ VPTree<dist_t, SearchOracle>::VPNode::VPNode(
 
   if (!data.empty() && data.size() <= BucketSize) {
     //如果是叶子节点
-        WallClockTimer wtm_node_hash;
+        WallClockTimer wtm_node_hash;  //对叶子节点进行hash的时间。计时器。
         wtm_node_hash.reset();
 
     CreateBucket(ChunkBucket, data, progress_bar);
@@ -788,7 +790,7 @@ VPTree<dist_t, SearchOracle>::VPNode::VPNode(
 
         wtm_node_hash.split();
         const double SearchTime_node_hash  = double(wtm_node_hash.elapsed())/1e3;
-        total_vptree_merkle_node_time += SearchTime_node_hash; 
+        total_vptree_merkle_node_time += SearchTime_node_hash;  //对叶子节点进行hash的时间
     //leaf_node_number+=data.size();
     return;
   }
@@ -885,7 +887,7 @@ VPTree<dist_t, SearchOracle>::VPNode::VPNode(
   //LOG(LIB_INFO) << "pivot_->bufferlength()         = " << pivot_->bufferlength();//都是528  
         wtm_node_actualHash.split();
         const double SearchTime_wtm_node_actualHash  = double(wtm_node_actualHash.elapsed())/1e3;
-        total_vptree_merkle_node_time += SearchTime_wtm_node_actualHash; 
+        total_vptree_merkle_node_time += SearchTime_wtm_node_actualHash; //加上，对中间节点进行hash的时间。
 
 
 
