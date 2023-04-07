@@ -491,8 +491,8 @@ namespace similarity {
         LOG(LIB_INFO) << "Maximum level = " << enterpoint_->level;
         LOG(LIB_INFO) << "Total memory allocated for optimized index+data: " << (total_memory_allocated >> 20) << " Mb";
    
-        WallClockTimer wtmstore_friends;
-        wtmstore_friends.reset();
+        WallClockTimer wtmstore_friends;  //把朋友放到数组里面所需要的时间。
+        wtmstore_friends.reset();    //开始计时。
 
         //构建hash数组的 字符数组
         int totalElementsStored_ = ElList_.size();

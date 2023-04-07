@@ -207,65 +207,57 @@ void VPTree<dist_t, SearchOracle>::Search(KNNQuery<dist_t>* query, IdType) const
         const double GenericSearch_Time  = double(wtm_GenericSearch.elapsed())/1e3; //这样的结果好像已经是毫秒了 ms
 
 
-
-  //LOG(LIB_INFO) << "KNNQuery VPtreeVisitTimes_test          = " << VPtreeVisitTimes_test;
-  //VPtreeVisitTimes_test = 0;  
+  //获得vptree访问过的叶子节点的逻辑开始。
+  LOG(LIB_INFO) << "KNNQuery VPtreeVisitTimes_test          = " << VPtreeVisitTimes_test;
+  VPtreeVisitTimes_test = 0;  
   //VPtreeVisitTimes_leaf = 0;
   query_times++;
-  // root_->RecursiveToGet_VPtreeVisitTimes_leaf(); 
-  // root_->RecursiveToSet_if_set_node_hash();
-  // LOG(LIB_INFO) << "KNNQuery VPtreeVisitTimes_leaf record          = " << VPtreeVisitTimes_leaf/query_times;
+  root_->RecursiveToGet_VPtreeVisitTimes_leaf(); 
+  root_->RecursiveToSet_if_set_node_hash();
+  LOG(LIB_INFO) << "KNNQuery average VPtreeVisitTimes_leaf record          = " << VPtreeVisitTimes_leaf/query_times;
+ //获得vptree访问过的叶子节点的逻辑结束。只需要注释这一小段代码就行。
 
 
- //SP构造VO的size实验代码
-// if(query_times<=99){
-// root_->RecursiveToSet_if_set_node_hash(); //把节点的if_set_node_hash全部重新置为fasle
-// }
-
-//   if(query_times == 100){
-//    root_->RecursiveToGet_VPtreeVisitTimes_leaf(); 
-//    LOG(LIB_INFO) << "KNNQuery VPtreeVisitTimes_leaf record          = " << VPtreeVisitTimes_leaf;
-//   }
 
 
-   //SP构造VO的时间实验代码
-   root_->RecursiveToConstructHash();//构建完整的验证merkle tree(把凑数的node找出来)
-    LOG(LIB_INFO) << "Save index ";
-   // //把VO数据结构存下来
-    SaveIndexVO();
 
-   root_->RecursiveToSet_if_set_node_hash(); //把节点的if_set_node_hash全部重新置为fasle
+  //  //SP构造VO的时间实验代码
+  //  root_->RecursiveToConstructHash();//构建完整的验证merkle tree(把凑数的node找出来)
+  //   LOG(LIB_INFO) << "Save index ";
+  //  // //把VO数据结构存下来
+  //   SaveIndexVO();
 
-        wtm.split();//计时结束。
-        const double SearchTime  = double(wtm.elapsed())/1e3; //这样的结果好像已经是毫秒了 ms
-        totalSearchTime += SearchTime; 
-        LOG(LIB_INFO) << ">>>> SP VO construction time:         " << totalSearchTime/(query_times*1.0);
-        //SP构造VO结束。
+  //  root_->RecursiveToSet_if_set_node_hash(); //把节点的if_set_node_hash全部重新置为fasle
+
+  //       wtm.split();//计时结束。
+  //       const double SearchTime  = double(wtm.elapsed())/1e3; //这样的结果好像已经是毫秒了 ms
+  //       totalSearchTime += SearchTime; 
+  //       LOG(LIB_INFO) << ">>>> SP VO construction time:         " << totalSearchTime/(query_times*1.0);
+  //       //SP构造VO结束。
 
  
-  LOG(LIB_INFO) << "Load index ";
-  //把VO数据结构读取出来。client验证VO的时间实验代码
-  WallClockTimer wtmload;
-  wtmload.reset();
-  LoadIndexVO();
-  //root_->GenericSearch(query, mx); //前面已经完成搜索时间计时了。GenericSearch_Time
+  // LOG(LIB_INFO) << "Load index ";
+  // //把VO数据结构读取出来。client验证VO的时间实验代码
+  // WallClockTimer wtmload;
+  // wtmload.reset();
+  // LoadIndexVO();
+  // //root_->GenericSearch(query, mx); //前面已经完成搜索时间计时了。GenericSearch_Time
 
-        wtmload.split();//计时结束。
-        const double SearchTimeload  = double(wtmload.elapsed())/1e3;
-        totalSearchTime_load += SearchTimeload; //totalSearchTime_load是一个全局变量。
-        totalSearchTime_load += GenericSearch_Time;
-        LOG(LIB_INFO) << ">>>> User VO verification totalSearchTime_load:         " << totalSearchTime_load/(query_times*1.0);
-  //用户验证VO结束。
+  //       wtmload.split();//计时结束。
+  //       const double SearchTimeload  = double(wtmload.elapsed())/1e3;
+  //       totalSearchTime_load += SearchTimeload; //totalSearchTime_load是一个全局变量。
+  //       totalSearchTime_load += GenericSearch_Time;
+  //       LOG(LIB_INFO) << ">>>> User VO verification totalSearchTime_load:         " << totalSearchTime_load/(query_times*1.0);
+  // //用户验证VO结束。
 
+
+
+  //下面的代码没有用到！！！！
   // //计时器 
         // wtm.split();
         // const double SearchTime  = double(wtm.elapsed())/1e3;
         // totalSearchTime += SearchTime; 
         // LOG(LIB_INFO) << ">>>> Search time:         " << totalSearchTime/(query_times*1.0);
-
-
-
-
 
 
   //用户侧验证VO的正确性
