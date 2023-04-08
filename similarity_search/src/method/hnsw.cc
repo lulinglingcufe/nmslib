@@ -487,7 +487,7 @@ namespace similarity {
         LOG(LIB_INFO) << ">>>> SearchTime_wtmCreateIndex :         " <<SearchTime_wtmCreateIndex;
 
 
-        LOG(LIB_INFO) << "Finished making optimized index";
+        LOG(LIB_INFO) << "\n\n\n\nFinished making optimized index";
         LOG(LIB_INFO) << "Maximum level = " << enterpoint_->level;
         LOG(LIB_INFO) << "Total memory allocated for optimized index+data: " << (total_memory_allocated >> 20) << " Mb";
    
@@ -529,10 +529,11 @@ namespace similarity {
         iLength = 0;
         std::sprintf(buffer_test_and_buffer,"%s%s",ElList_[i]->getData()->buffer(),buffer_test);
         actualHashArray[i] = buffer_test_and_buffer;  //把字符数组指针放到一个数组里面。
-        } //完成hash的字符串数组的构建
+        } //完成hash的字符串数组的构建。把merkle朋友放入数组的耗时。
+
         wtmstore_friends.split();
         const double SearchTime_wtmstore_friends  = double(wtmstore_friends.elapsed())/1e3;
-        LOG(LIB_INFO) << ">>>> SearchTime_wtmstore_friends :         " << SearchTime_wtmstore_friends;
+        LOG(LIB_INFO) << "\n\n\n>>>> SearchTime_wtmstore_friends :         " << SearchTime_wtmstore_friends<<"\n\n\n";
 
         // LOG(LIB_INFO) << "actualHash  :  ";
         //          for(int j = 0; j < 32; j++) {
