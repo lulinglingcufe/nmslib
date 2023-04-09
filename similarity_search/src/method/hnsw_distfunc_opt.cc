@@ -356,21 +356,21 @@ int total_tum_set_size = 0;
 
         ////LOG(LIB_INFO) << "toal_query_number:         " << toal_query_number;
         total_tum_set_size+=tum_set.size();
-        ////遍历set中的元素。打印出来，可以做proof的实验。//开始
+        // ////遍历set中的元素。打印出来，可以做proof的实验。//开始
 
-        LOG(LIB_INFO) << "tum_set.size():         " << tum_set.size();
-        printf("\n");
+        // LOG(LIB_INFO) << "tum_set.size():         " << tum_set.size();
+        // printf("\n");
 
-        printf("{");
-        set<int>::iterator it;
-        for (it = tum_set.begin(); it != tum_set.end(); it++){
-            printf("%d",*it);
-            printf(",");
-        }
-        printf("}\n"); 
+        // printf("{");
+        // set<int>::iterator it;
+        // for (it = tum_set.begin(); it != tum_set.end(); it++){
+        //     printf("%d",*it);
+        //     printf(",");
+        // }
+        // printf("}\n"); 
 
-        //遍历set中的元素。打印出来，可以做proof的实验。
-        //LOG(LIB_INFO) << "Iterator Set:         " << *it; //结束
+        // //遍历set中的元素。打印出来，可以做proof的实验。
+        // //LOG(LIB_INFO) << "Iterator Set:         " << *it; //结束
 
         if(toal_query_number == 100){
          LOG(LIB_INFO) << "average total_tum_set_size:         " << total_tum_set_size/100.0<<"\n\n\n";
@@ -385,90 +385,90 @@ int total_tum_set_size = 0;
         }
 
 
-//         //-------------------在这里加上存储朋友的代码。代码逻辑开始。
-//         WallClockTimer wtmsave;
-//         wtmsave.reset();
+        //-------------------在这里加上存储朋友的代码。代码逻辑开始。
+        WallClockTimer wtmsave;
+        wtmsave.reset();
 
-//   std::string location = "/home/ubuntu/lulingling/nmslib/similarity_search/hnswvo/hnsw_node_and_friend_"+std::to_string(toal_query_number);
-//   std::ofstream output(location, std::ios::binary);
-//   CHECK_MSG(output, "Cannot open file '" + location + "' for writing");
-//   output.exceptions(ios::badbit | ios::failbit);
+  std::string location = "/home/ubuntu/lulingling/nmslib/similarity_search/hnswvo/hnsw_node_and_friend_"+std::to_string(toal_query_number);
+  std::ofstream output(location, std::ios::binary);
+  CHECK_MSG(output, "Cannot open file '" + location + "' for writing");
+  output.exceptions(ios::badbit | ios::failbit);
 
-//         set<int>::iterator it;
-//         for (it = tum_set.begin(); it != tum_set.end(); it++){
-//             const HnswNode& node = *ElList_[*it];
-//             unsigned currlevel = node.level;
-//             CHECK(currlevel + 1 == node.allFriends_.size());
-//             /*
-//              * This check strangely fails ...
-//             CHECK_MSG(maxlevel_ >= currlevel, ""
-//                     "maxlevel_ (" + ConvertToString(maxlevel_) + ") < node.allFriends_.size() (" + ConvertToString(currlevel));
-//                     */
-//             writeBinaryPOD(output, currlevel);
-//             for (unsigned level = 0; level <= currlevel; ++level) {
-//                 const auto& friends = node.allFriends_[level];
-//                 unsigned friendQty = friends.size();
-//                 writeBinaryPOD(output, friendQty); //这个好像是一层里面朋友的数量？
-//                 for (unsigned k = 0; k < friendQty; ++k) {
-//                     IdType friendId = friends[k]->id_;  //朋友的id。
-//                     writeBinaryPOD(output, friendId);
-//                 }
-//             }
-//         }
-//         output.close(); 
-
-
-//         wtmsave.split();
-//         const double SearchTime_save  = double(wtmsave.elapsed())/1e3;
-//         totalSearchTime_hnsw_save += SearchTime_save; 
-//         if(toal_query_number == 100){
-//             LOG(LIB_INFO) << ">>>> SP generate VO: average  totalSearchTime_hnsw_save time:         " << totalSearchTime_hnsw_save/(toal_query_number*1.0);
-//         }        
-//       //----------------存储朋友的逻辑结束。
+        set<int>::iterator it;
+        for (it = tum_set.begin(); it != tum_set.end(); it++){
+            const HnswNode& node = *ElList_[*it];
+            unsigned currlevel = node.level;
+            CHECK(currlevel + 1 == node.allFriends_.size());
+            /*
+             * This check strangely fails ...
+            CHECK_MSG(maxlevel_ >= currlevel, ""
+                    "maxlevel_ (" + ConvertToString(maxlevel_) + ") < node.allFriends_.size() (" + ConvertToString(currlevel));
+                    */
+            writeBinaryPOD(output, currlevel);
+            for (unsigned level = 0; level <= currlevel; ++level) {
+                const auto& friends = node.allFriends_[level];
+                unsigned friendQty = friends.size();
+                writeBinaryPOD(output, friendQty); //这个好像是一层里面朋友的数量？
+                for (unsigned k = 0; k < friendQty; ++k) {
+                    IdType friendId = friends[k]->id_;  //朋友的id。
+                    writeBinaryPOD(output, friendId);
+                }
+            }
+        }
+        output.close(); 
 
 
-//        //----------------读取朋友的逻辑开始。
-//         WallClockTimer wtmload;
-//         wtmload.reset();
-
-//         std::ifstream input(location, 
-//                             std::ios::binary); /* text files can be opened in binary mode as well */
-//         CHECK_MSG(input, "Cannot open file '" + location + "' for reading");
-
-//         input.exceptions(ios::badbit | ios::failbit);
-
-//          set<int>::iterator itload;
-//         for (itload = tum_set.begin(); itload != tum_set.end(); itload++){
-//             HnswNode& node = *ElList_[*itload];
-//             unsigned currlevel;
-//             readBinaryPOD(input, currlevel);
-//             node.level = currlevel;
-//             node.allFriends_.resize(currlevel + 1);
-//             for (unsigned level = 0; level <= currlevel; ++level) {
-//                 auto& friends = node.allFriends_[level];
-//                 unsigned friendQty;
-//                 readBinaryPOD(input, friendQty);
-//                 friends.resize(friendQty);
-//                 for (unsigned k = 0; k < friendQty; ++k) {
-//                     IdType friendId;
-//                     readBinaryPOD(input, friendId);
-//                     CHECK_MSG(friendId >= 0 && friendId < totalElementsStored_,
-//                              "Invalid friendId = " + ConvertToString(friendId) + " for node id: " + ConvertToString(*itload));
-//                     friends[k] = ElList_[friendId];
-//                 }
-
-//             }
-//         }
-//             input.close();
+        wtmsave.split();
+        const double SearchTime_save  = double(wtmsave.elapsed())/1e3;
+        totalSearchTime_hnsw_save += SearchTime_save; 
+        if(toal_query_number == 100){
+            LOG(LIB_INFO) << ">>>> SP generate VO: average  totalSearchTime_hnsw_save time:         " << totalSearchTime_hnsw_save/(toal_query_number*1.0);
+        }        
+      //----------------存储朋友的逻辑结束。
 
 
-//         wtmload.split();
-//         const double SearchTimeload  = double(wtmload.elapsed())/1e3;
-//         totalSearchTime_hnsw_load += SearchTimeload; 
-//         if(toal_query_number == 100){
-//         LOG(LIB_INFO) << ">>>> User verifies VO: average totalSearchTime_hnsw_load :         " << totalSearchTime_hnsw_load/(toal_query_number*1.0)<<"\n\n\n";;
-//         }
-//        //----------------读取朋友的逻辑结束。 
+       //----------------读取朋友的逻辑开始。
+        WallClockTimer wtmload;
+        wtmload.reset();
+
+        std::ifstream input(location, 
+                            std::ios::binary); /* text files can be opened in binary mode as well */
+        CHECK_MSG(input, "Cannot open file '" + location + "' for reading");
+
+        input.exceptions(ios::badbit | ios::failbit);
+
+         set<int>::iterator itload;
+        for (itload = tum_set.begin(); itload != tum_set.end(); itload++){
+            HnswNode& node = *ElList_[*itload];
+            unsigned currlevel;
+            readBinaryPOD(input, currlevel);
+            node.level = currlevel;
+            node.allFriends_.resize(currlevel + 1);
+            for (unsigned level = 0; level <= currlevel; ++level) {
+                auto& friends = node.allFriends_[level];
+                unsigned friendQty;
+                readBinaryPOD(input, friendQty);
+                friends.resize(friendQty);
+                for (unsigned k = 0; k < friendQty; ++k) {
+                    IdType friendId;
+                    readBinaryPOD(input, friendId);
+                    CHECK_MSG(friendId >= 0 && friendId < totalElementsStored_,
+                             "Invalid friendId = " + ConvertToString(friendId) + " for node id: " + ConvertToString(*itload));
+                    friends[k] = ElList_[friendId];
+                }
+
+            }
+        }
+            input.close();
+
+
+        wtmload.split();
+        const double SearchTimeload  = double(wtmload.elapsed())/1e3;
+        totalSearchTime_hnsw_load += SearchTimeload; 
+        if(toal_query_number == 100){
+        LOG(LIB_INFO) << ">>>> User verifies VO: average totalSearchTime_hnsw_load :         " << totalSearchTime_hnsw_load/(toal_query_number*1.0)<<"\n\n\n";;
+        }
+       //----------------读取朋友的逻辑结束。 
 
 
      
