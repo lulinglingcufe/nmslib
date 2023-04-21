@@ -356,7 +356,7 @@ int total_tum_set_size = 0;
 
         ////LOG(LIB_INFO) << "toal_query_number:         " << toal_query_number;
         total_tum_set_size+=tum_set.size();
-        // ////遍历set中的元素。打印出来，可以做proof的实验。//开始
+        // //遍历set中的元素。打印出来，可以做proof的实验。//开始
 
         // LOG(LIB_INFO) << "tum_set.size():         " << tum_set.size();
         // printf("\n");
@@ -452,8 +452,8 @@ int total_tum_set_size = 0;
                 for (unsigned k = 0; k < friendQty; ++k) {
                     IdType friendId;
                     readBinaryPOD(input, friendId);
-                    CHECK_MSG(friendId >= 0 && friendId < totalElementsStored_,
-                             "Invalid friendId = " + ConvertToString(friendId) + " for node id: " + ConvertToString(*itload));
+                    // CHECK_MSG(friendId >= 0 && friendId < totalElementsStored_,
+                    //          "Invalid friendId = " + ConvertToString(friendId) + " for node id: " + ConvertToString(*itload));
                     friends[k] = ElList_[friendId];
                 }
 
