@@ -496,6 +496,8 @@ namespace similarity {
 
         //构建hash数组的 字符数组
         int totalElementsStored_ = ElList_.size();
+        int totalChangeElements = 0;
+        bool ifChange = false; 
 
         // std::uint8_t * actualHashArray[totalElementsStored_];
         // std::uint8_t actualHash[Keccak256::HASH_LEN];
@@ -511,25 +513,41 @@ namespace similarity {
         for(int i = 0; i < totalElementsStored_; i++){
         char buffer_test_and_buffer[200+530]; //节点buffer的数据
         char buffer_test[200]; //朋友的数据
-        const HnswNode& node = *ElList_[i];
+        const HnswNode& node = *ElList_[i];  //获得当前的这个节点node
         unsigned currlevel = node.level;
         CHECK(currlevel + 1 == node.allFriends_.size());
         iLength += std::sprintf(&buffer_test[iLength],"%d",currlevel);
 
-            for (unsigned level = 0; level <= currlevel; ++level) {
+            for (unsigned level = 0; level <= currlevel && ifChange == false; ++level) {
                 const auto& friends = node.allFriends_[level];
                 unsigned friendQty = friends.size();
                 //这个好像是一层里面朋友的数量？
                 iLength += std::sprintf(&buffer_test[iLength],"%d",friendQty);
-                for (unsigned k = 0; k < friendQty; ++k) {
-                    IdType friendId = friends[k]->id_;  //朋友的id。
+                for (unsigned k = 0; k < friendQty && ifChange == false; ++k) {
+                    IdType friendId = friends[k]->id_;  //一层里面朋友的id。
+                    //把它打印出来看看？（朋友的id）
+                    //LOG(LIB_INFO) << friendId <<",";
+                    if (friendId>  540000 ){  // 499999, 490000
+                        ifChange = true;
+                        totalChangeElements++;
+                    }
                     iLength += std::sprintf(&buffer_test[iLength],"%d",friendId);
                 }
-            }
+
+            } //当前节点的朋友遍历结束。
+
+            if (ifChange == true){
+                        ifChange = false;
+                    }
+
+            //LOG(LIB_INFO) << "Finish a node friend print \n\n\n";
+
         iLength = 0;
         std::sprintf(buffer_test_and_buffer,"%s%s",ElList_[i]->getData()->buffer(),buffer_test);
         actualHashArray[i] = buffer_test_and_buffer;  //把字符数组指针放到一个数组里面。
         } //完成hash的字符串数组的构建。把merkle朋友放入数组的耗时。
+          //完成所有节点的遍历
+        LOG(LIB_INFO) << "totalChangeElements:  "<< totalChangeElements;
 
         wtmstore_friends.split();
         const double SearchTime_wtmstore_friends  = double(wtmstore_friends.elapsed())/1e3;

@@ -486,7 +486,7 @@ VPTree<dist_t, SearchOracle>::SaveNodeData(
   }
 
   CHECK(node != nullptr);
-  writeBinaryPOD(output, node->mediandist_);
+  writeBinaryPOD(output, node->mediandist_); //中间值
 
   size_t bucket_size = node->bucket_ ? node->bucket_->size() : 0; 
   writeBinaryPOD(output, bucket_size); //这个好像是在存储节点数据
