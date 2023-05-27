@@ -341,7 +341,7 @@ void VPTree<dist_t, SearchOracle>::SaveIndex(const std::string& location) {
 
   // Save node data
   if (root_) {
-    SaveNodeData(output, root_.get());
+    SaveNodeData(output, root_.get());  //这里是存储ADS：merkle tree。而不是索引本身了。
   }
   output.close();
 }
@@ -456,7 +456,7 @@ void VPTree<dist_t, SearchOracle>::LoadIndexVO() const{
 
 
 
-
+//这里是存储ADS：merkle tree
 template <typename dist_t, typename SearchOracle>
 void
 VPTree<dist_t, SearchOracle>::SaveNodeData(
@@ -479,23 +479,29 @@ VPTree<dist_t, SearchOracle>::SaveNodeData(
   if (node != nullptr) {
     pivotId = node->pivot_ ? node->pivot_->id() : PIVOT_ID_NULL_PIVOT;
   }
-  writeBinaryPOD(output, pivotId);
+  //writeBinaryPOD(output, pivotId);
 
   if (node == nullptr) {
     return;
   }
 
   CHECK(node != nullptr);
-  writeBinaryPOD(output, node->mediandist_);
+  //writeBinaryPOD(output, node->mediandist_); //中间值(不需要存储)
 
-  size_t bucket_size = node->bucket_ ? node->bucket_->size() : 0; 
-  writeBinaryPOD(output, bucket_size); //这个好像是在存储节点数据
+  // size_t bucket_size = node->bucket_ ? node->bucket_->size() : 0; 
+  // writeBinaryPOD(output, bucket_size); //这个好像是在存储节点数据
 
-  if (node->bucket_) {
-    for (const auto& element : *(node->bucket_)) {
-      writeBinaryPOD(output, element->id());
-    }
-  } 
+  memcpy(node_hash_value_test, node->node_hash_value_, Keccak256::HASH_LEN);
+  writeBinaryPOD(output, node_hash_value_test); 
+
+  // if (node->bucket_) {
+  //   for (const auto& element : *(node->bucket_)) {
+  //     writeBinaryPOD(output, element->id());
+  //   }
+  // } 
+
+
+
   //遍历的过程
   SaveNodeData(output, node->left_child_);
   SaveNodeData(output, node->right_child_);
@@ -783,13 +789,13 @@ VPTree<dist_t, SearchOracle>::VPNode::VPNode(
 {
   CHECK(!data.empty());
 
-  if (!data.empty() && data.size() <= BucketSize) {
-    //如果是叶子节点
+  if (!data.empty() && data.size() <= BucketSize) {//如果是叶子节点
         WallClockTimer wtm_node_hash;  //对叶子节点进行hash的时间。计时器。
         wtm_node_hash.reset();
 
     CreateBucket(ChunkBucket, data, progress_bar);
     Keccak256::getHash(  (uint8_t *)CacheOptimizedBucket_, TotalSpaceUsed(data), node_hash_value_);
+    //获得叶子节点的node_hash_value_
 
         wtm_node_hash.split();
         const double SearchTime_node_hash  = double(wtm_node_hash.elapsed())/1e3;
